@@ -33,7 +33,10 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -47,30 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCp-U_hy1BI-bS-C_RkZASlBOVOwwFyb_o',
-    appId: '1:486789140149:web:a518bd00bc95324b2938fc',
-    messagingSenderId: '486789140149',
-    projectId: 'attendease-aa7d7',
-    authDomain: 'attendease-aa7d7.firebaseapp.com',
-    storageBucket: 'attendease-aa7d7.firebasestorage.app',
-    measurementId: 'G-KV5R631347',
+    apiKey: 'AIzaSyDLdMpE2USUjPY4VP3yCkq4_B-5DamdSyc',
+    appId: '1:36391741820:web:1a908b9910a52a28aadcf9',
+    messagingSenderId: '36391741820',
+    projectId: 'attendease-54526',
+    authDomain: 'attendease-54526.firebaseapp.com',
+    storageBucket: 'attendease-54526.firebasestorage.app',
+    measurementId: 'G-R7NJRJGQSS',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCRQJbAas4hveZ4OCOH9k8Oo4Q03q53XcI',
-    appId: '1:486789140149:android:a1e48c53dadd9ee22938fc',
-    messagingSenderId: '486789140149',
-    projectId: 'attendease-aa7d7',
-    storageBucket: 'attendease-aa7d7.firebasestorage.app',
+    apiKey: 'AIzaSyCQCKIZwU8j6vRhQ7Nce4fWqH9-hODw1Lw',
+    appId: '1:36391741820:android:d09b42597902a973aadcf9',
+    messagingSenderId: '36391741820',
+    projectId: 'attendease-54526',
+    storageBucket: 'attendease-54526.firebasestorage.app',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCp-U_hy1BI-bS-C_RkZASlBOVOwwFyb_o',
-    appId: '1:486789140149:web:5a196e0ae0d753922938fc',
-    messagingSenderId: '486789140149',
-    projectId: 'attendease-aa7d7',
-    authDomain: 'attendease-aa7d7.firebaseapp.com',
-    storageBucket: 'attendease-aa7d7.firebasestorage.app',
-    measurementId: 'G-3ZYLJ7HF0W',
-  );
 }

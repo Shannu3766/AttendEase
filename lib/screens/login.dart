@@ -16,13 +16,15 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   var _islogin = true;
   signinwithgoogle() async {
-    final GoogleSignInAccount? guser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication gauth = await guser!.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gauth.accessToken,
-      idToken: gauth.idToken,
+    GoogleSignInAccount? googleuser = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication? gauth = await googleuser?.authentication;
+    AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: gauth?.accessToken,
+      idToken: gauth?.idToken,
     );
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    UserCredential userCred =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    // return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
