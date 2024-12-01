@@ -1,4 +1,6 @@
-import 'package:attendease/screens/Home_screen.dart';
+import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/screens/Add_subjects.dart';
+import 'package:attendease/screens/Add_timtable_Screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:attendease/firebase_options.dart';
@@ -13,9 +15,6 @@ void main() async {
   );
   runApp(const MyApp());
 }
-// Platform  Firebase App Id
-// web       1:36391741820:web:1a908b9910a52a28aadcf9
-// android   1:36391741820:android:d09b42597902a973aadcf9
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -35,20 +34,12 @@ class _MyAppState extends State<MyApp> {
         body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            // if (snapshot.connectionState == ConnectionState.waiting) {
-            //   return const WaitingScreen();
-            // }
             if (snapshot.hasData) {
               user = FirebaseAuth.instance.currentUser!;
               print(user);
-              return const AddSubjectScreen();
+              // return const AddSubjectScreen();
+              return AddTimetableScreen();
             }
-            // if (user != null && user!.photoURL == null) {
-            //   return const User_Registration();
-            // }
-            // if (snapshot.hasData && user!.photoURL != null) {
-            //   return const HomeScreen();
-            // }
             return const AuthScreen();
           },
         ),
