@@ -17,6 +17,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
   final user = FirebaseAuth.instance.currentUser;
   String subjectCode = "";
   String subjectTitle = "";
+  bool isloading = false;
   @override
   void initState() {
     fetchSubjects();
@@ -28,6 +29,9 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
 
   Future<void> fetchSubjects() async {
     try {
+      setState(() {
+        isloading = !isloading;
+      });
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
@@ -51,13 +55,13 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
           subjects = [];
         });
       }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to fetch subjects: $error")),
-      );
-    }
+    } catch (error) {}
+    setState(() {
+      isloading = !isloading;
+    });
   }
-  void initalizeattendence(){
+
+  void initalizeattendence() {
     for (int i = 0; i < subjects.length; i++) {
       FirebaseFirestore.instance
           .collection(user!.uid)
@@ -71,7 +75,6 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
         'attended': 0,
       });
     }
-    
   }
 
   void saveSubjects() async {
@@ -147,7 +150,15 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                     textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
-                      hintText: "Add Subject",
+                      hintText: "Subject List",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -165,6 +176,14 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       hintText: "Subject Code",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -179,9 +198,16 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   Center(
                     child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        iconColor: Colors.white,
+                      ),
                       onPressed: _submit,
-                      label: const Text("Add Subject"),
-                      icon: const Icon(Icons.add),
+                      label: const Text(
+                        "Add Subject",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      icon: const Icon(Icons.save),
                     ),
                   ),
                   SizedBox(height: 1000),
@@ -199,48 +225,94 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Subject"),
-        actions: [
-          IconButton(
-            onPressed: saveSubjects,
-            icon: const Icon(Icons.save),
-          ),
-        ],
+        actions: [],
       ),
       body: Column(
         children: [
-          Expanded(
-            flex: 2,
-            child: subjects.isEmpty
-                ? const Center(child: Text("No subjects added yet"))
-                : ListView.builder(
-                    itemCount: subjects.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(subjects[index].subname),
-                        subtitle: Text('Code: ${subjects[index].subcode}'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            setState(() {
-                              subjects.removeAt(index);
-                            });
+          isloading
+              ? const Center(child: CircularProgressIndicator())
+              : Expanded(
+                  flex: 2,
+                  child: subjects.isEmpty
+                      ? const Center(child: Text("No subjects added yet"))
+                      : ListView.builder(
+                          itemCount: subjects.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              child: Card(
+                                elevation: 4,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: ListTile(
+                                  title: Text(subjects[index].subname),
+                                  subtitle:
+                                      Text('Code: ${subjects[index].subcode}'),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      setState(() {
+                                        subjects.removeAt(index);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
                           },
                         ),
-                      );
-                    },
+                ),
+          !isloading
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              showAddSubjectScreen();
+                            },
+                            label: const Text(
+                              "Add Subject",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
+                        onPressed: saveSubjects,
+                        icon: Icon(
+                          Icons.save,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          "Save Subjects",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height * 0.02,
-            ),
-            child: ElevatedButton(
-              onPressed: showAddSubjectScreen,
-              child: const Text("Add Subject"),
-            ),
-          ),
+                )
+              : Text(""),
         ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     showAddSubjectScreen();
+      //   },
+      //   child: Icon(Icons.add),
+      //   backgroundColor: Colors.blue,
+      // ),
     );
   }
 }

@@ -21,9 +21,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
   List<Subject> subjects = [];
   List<List<Subject>> weekData = [[], [], [], [], [], []];
   bool isloading = false;
-
   var _selectedIndex = 0;
-
   Future<void> fetchSubjects() async {
     try {
       setState(() {
@@ -180,9 +178,8 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                   children: [
                     Container(
                       padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.width *
-                              0.05), 
-                      height: 100, 
+                          MediaQuery.of(context).size.width * 0.05),
+                      height: 100,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: Days.length,
@@ -242,17 +239,25 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                           : ListView.builder(
                               itemCount: day_time.length,
                               itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(day_time[index].subname),
-                                  trailing: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          weekData[_selectedIndex]
-                                              .removeAt(index);
-                                          day_time = weekData[_selectedIndex];
-                                        });
-                                      },
-                                      icon: Icon(Icons.delete)),
+                                return Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Card(
+                                    elevation: 4,
+                                    child: ListTile(
+                                      title: Text(day_time[index].subname),
+                                      subtitle: Text(day_time[index].subcode),
+                                      trailing: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              weekData[_selectedIndex]
+                                                  .removeAt(index);
+                                              day_time =
+                                                  weekData[_selectedIndex];
+                                            });
+                                          },
+                                          icon: Icon(Icons.delete)),
+                                    ),
+                                  ),
                                 );
                               },
                             ),
@@ -261,7 +266,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                         onPressed: () {
                           add_subject_to_day();
                         },
-                        child: Text("Add Subject")),
+                        child: const Text("Add Subject")),
                   ],
                 ),
         ),

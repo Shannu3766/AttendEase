@@ -1,4 +1,5 @@
-import 'package:attendease/screens/home_screen.dart';
+import 'package:attendease/screens/AddAttendence.dart';
+import 'package:attendease/screens/navigator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:attendease/firebase_options.dart';
@@ -33,7 +34,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               user = FirebaseAuth.instance.currentUser!;
-              return HomeScreen();
+              return const navigator();
             }
             return const AuthScreen();
           },
