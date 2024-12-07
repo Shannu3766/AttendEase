@@ -1,13 +1,10 @@
-import 'package:attendease/Classes/class_subject.dart';
-import 'package:attendease/screens/Add_subjects.dart';
-import 'package:attendease/screens/Add_timtable_Screen.dart';
+import 'package:attendease/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:attendease/firebase_options.dart';
 import 'package:attendease/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-//
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -36,9 +33,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               user = FirebaseAuth.instance.currentUser!;
-              print(user);
-              // return const AddSubjectScreen();
-              return AddTimetableScreen();
+              return HomeScreen();
             }
             return const AuthScreen();
           },

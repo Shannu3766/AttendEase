@@ -57,6 +57,22 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
       );
     }
   }
+  void initalizeattendence(){
+    for (int i = 0; i < subjects.length; i++) {
+      FirebaseFirestore.instance
+          .collection(user!.uid)
+          .doc("Semester")
+          .collection("Sem1")
+          .doc("Subjects")
+          .collection(subjects[i].subname)
+          .doc("Attendence")
+          .set({
+        'total': 0,
+        'attended': 0,
+      });
+    }
+    
+  }
 
   void saveSubjects() async {
     try {

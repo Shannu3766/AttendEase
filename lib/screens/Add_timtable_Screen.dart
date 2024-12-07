@@ -20,11 +20,15 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
   ];
   List<Subject> subjects = [];
   List<List<Subject>> weekData = [[], [], [], [], [], []];
+  bool isloading = false;
 
   var _selectedIndex = 0;
 
   Future<void> fetchSubjects() async {
     try {
+      setState(() {
+        isloading = true;
+      });
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
@@ -53,6 +57,9 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
         SnackBar(content: Text("Failed to fetch subjects: $error")),
       );
     }
+    setState(() {
+      isloading = false;
+    });
   }
 
   void add_subject_to_day() {
@@ -167,88 +174,96 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
           ],
         ),
         body: Center(
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(
-                    MediaQuery.of(context).size.width * 0.05), // Add padding
-                height: 100, // Adjust height to fit CircleAvatar
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: Days.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedIndex = index; // Update the selected index
-                          });
-                        },
-                        child: CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.05,
-                          backgroundColor: _selectedIndex == index
-                              ? Colors.blue // Highlighted color
-                              : Colors.grey[300], // Default color
-                          child: Text(
-                            Days[index][0],
-                            style: TextStyle(
-                              color: _selectedIndex == index
-                                  ? Colors.white // Text color when selected
-                                  : Colors.black, // Default text color
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.05,
-                  right: MediaQuery.of(context).size.width * 0.05,
-                ),
-                child: const Divider(
-                  thickness: 2,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                Days[_selectedIndex],
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Expanded(
-                child: day_time.isEmpty
-                    ? Text("No data")
-                    : ListView.builder(
-                        itemCount: day_time.length,
+          child: _selectedIndex == -1
+              ? CircularProgressIndicator()
+              : Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.width *
+                              0.05), 
+                      height: 100, 
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: Days.length,
                         itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(day_time[index].subname),
-                            trailing: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    weekData[_selectedIndex].removeAt(index);
-                                    day_time = weekData[_selectedIndex];
-                                  });
-                                },
-                                icon: Icon(Icons.delete)),
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedIndex =
+                                      index; // Update the selected index
+                                });
+                              },
+                              child: CircleAvatar(
+                                radius:
+                                    MediaQuery.of(context).size.width * 0.05,
+                                backgroundColor: _selectedIndex == index
+                                    ? Colors.blue // Highlighted color
+                                    : Colors.grey[300], // Default color
+                                child: Text(
+                                  Days[index][0],
+                                  style: TextStyle(
+                                    color: _selectedIndex == index
+                                        ? Colors
+                                            .white // Text color when selected
+                                        : Colors.black, // Default text color
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           );
                         },
                       ),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    add_subject_to_day();
-                  },
-                  child: Text("Add Subject")),
-            ],
-          ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.05,
+                        right: MediaQuery.of(context).size.width * 0.05,
+                      ),
+                      child: const Divider(
+                        thickness: 2,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      Days[_selectedIndex],
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Expanded(
+                      child: day_time.isEmpty
+                          ? Text("No data")
+                          : ListView.builder(
+                              itemCount: day_time.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(day_time[index].subname),
+                                  trailing: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          weekData[_selectedIndex]
+                                              .removeAt(index);
+                                          day_time = weekData[_selectedIndex];
+                                        });
+                                      },
+                                      icon: Icon(Icons.delete)),
+                                );
+                              },
+                            ),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          add_subject_to_day();
+                        },
+                        child: Text("Add Subject")),
+                  ],
+                ),
         ),
       ),
     );
