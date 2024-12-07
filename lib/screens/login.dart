@@ -11,8 +11,6 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-// SHA1: B2:3C:3A:93:77:86:3A:45:48:07:70:90:48:F2:AD:8A:6F:0E:35:DD
-//  SHA256: E3:CB:19:2D:D8:F7:12:93:54:16:02:2B:21:D3:38:62:B6:21:82:54:DA:1D:79:BA:35:5F:51:39:04:54:25:66
 class _AuthScreenState extends State<AuthScreen> {
   var _islogin = true;
   signinwithgoogle() async {

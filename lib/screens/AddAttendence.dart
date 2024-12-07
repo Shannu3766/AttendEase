@@ -124,12 +124,16 @@ class _AddAttendenceState extends State<AddAttendence> {
           .doc(day)
           .set({"subjects": serializedAttendance});
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Uploaded Successfully")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Uploaded Successfully"),
+          duration: Duration(seconds: 1),
+        ),
+      );
     } catch (e) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Upload Failed")));
+      // ScaffoldMessenger.of(context).clearSnackBars();
+      // ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text("Upload Failed")));
     }
   }
 

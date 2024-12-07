@@ -1,4 +1,3 @@
-import 'package:attendease/screens/AddAttendence.dart';
 import 'package:attendease/screens/navigator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
