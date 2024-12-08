@@ -1,3 +1,4 @@
+import 'package:attendease/screens/Profile_screen.dart';
 import 'package:attendease/screens/navigator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,8 @@ class _MyAppState extends State<MyApp> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               user = FirebaseAuth.instance.currentUser!;
-              return const navigator();
+              // return const navigator();
+              return const ProfileScreen();
             }
             return const AuthScreen();
           },
