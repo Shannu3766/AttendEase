@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:intl/intl.dart'; // Import this for date formatting
+import 'package:intl/intl.dart';
 
 class AddAttendence extends StatefulWidget {
   @override
@@ -91,11 +91,11 @@ class _AddAttendenceState extends State<AddAttendence> {
                           child: ListTile(
                             title: Text(
                               subjects[index].subname,
-                              style: TextStyle(color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                             ),
                             subtitle: Text(
                               'Code: ${subjects[index].subcode}',
-                              style: TextStyle(color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ),
                         ),
@@ -209,12 +209,12 @@ class _AddAttendenceState extends State<AddAttendence> {
           .set({"subjects": serializedAttendance});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Attendance updated successfully!")),
+        const SnackBar(content: Text("Attendance updated successfully!")),
       );
     } catch (e) {
       print("Error updating attendance: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to update attendance.")),
+        const SnackBar(content: Text("Failed to update attendance.")),
       );
     }
   }
@@ -231,7 +231,7 @@ class _AddAttendenceState extends State<AddAttendence> {
                 onPressed: () {
                   attendece.isNotEmpty ? update_attendece : null;
                 },
-                icon: Icon(Icons.save)),
+                icon: const Icon(Icons.save)),
           ),
           const SizedBox(width: 16),
         ],
@@ -244,7 +244,8 @@ class _AddAttendenceState extends State<AddAttendence> {
               const SizedBox(width: 16),
               Text(
                 "Date: $formattedDate",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               attendece.isNotEmpty
@@ -272,7 +273,7 @@ class _AddAttendenceState extends State<AddAttendence> {
                                     attendece.removeAt(index);
                                   });
                                 },
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                               ),
                             ),
                           );
@@ -295,7 +296,7 @@ class _AddAttendenceState extends State<AddAttendence> {
         backgroundColor: Colors.blue,
         children: [
           SpeedDialChild(
-            child: Icon(Icons.calendar_today, color: Colors.white),
+            child: const Icon(Icons.calendar_today, color: Colors.white),
             backgroundColor: Colors.green,
             label: 'Select Date',
             onTap: () async {
@@ -323,7 +324,7 @@ class _AddAttendenceState extends State<AddAttendence> {
             },
           ),
           SpeedDialChild(
-            child: Icon(Icons.upload, color: Colors.white),
+            child: const Icon(Icons.upload, color: Colors.white),
             backgroundColor: Colors.purple,
             label: 'Upload Attendance',
             onTap: () => update_attendece(),

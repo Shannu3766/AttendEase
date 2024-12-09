@@ -18,8 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isloading = false;
   bool isday_data_avaliable = false;
   final user = FirebaseAuth.instance.currentUser;
+  late String Semster_num;
   List<List<Subject>> weekData = [[], [], [], [], [], [], []];
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Attendance")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc(dayId);
 
       final docSnapshot = await docRef.get();
@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Timetable");
 
       final docSnapshot = await docRef.get();
@@ -224,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void initState() {
     day = _getDayOfWeek(DateTime.now());
+    Semster_num = user!.displayName ?? '';
     fetchWeekData();
     super.initState();
   }

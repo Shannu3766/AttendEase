@@ -21,21 +21,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var req_Attendece = "";
   var semster = "";
   final user = FirebaseAuth.instance.currentUser;
-  void get_details() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection(user!.uid)
-        .doc("details")
-        .get();
-    if (snapshot.exists) {
-      setState(() {
-        name = snapshot["name"];
-        phone = snapshot["phone"];
-        college = snapshot["college"];
-        req_Attendece = snapshot["req_Attendece"];
-        semster = snapshot["req_Attendece"];
-      });
-    }
-  }
+
+  // void get_details() async {
+  //   final snapshot = await FirebaseFirestore.instance
+  //       .collection(user!.uid)
+  //       .doc("details")
+  //       .get();
+  //   if (snapshot.exists) {
+  //     setState(() {
+  //       name = snapshot['name'];
+  //       phone = snapshot['phone'];
+  //       req_Attendece = snapshot['req_Attendece'];
+  //       college = snapshot['college'];
+  //       semster = snapshot['semster'];
+  //     });
+  //   }
+  // }
 
   void update_details() async {
     var isvalid = formKey.currentState!.validate();
@@ -50,10 +51,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'req_Attendece': req_Attendece,
       'semster': semster,
     });
-    await user?.updateProfile(displayName: semster);
+    await user?.updateDisplayName(semster);
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return navigator();
     }));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // get_details();
+    super.initState();
   }
 
   @override
@@ -73,8 +81,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     CustomInputTile(
+                      intialvalue: name,
                       isnum: false,
-                      hintText: "Name",
+                      // hintText: "Name",
                       icon: Icons.person,
                       labelText: "Name",
                       onChanged: (value) {
@@ -90,8 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                     CustomInputTile(
+                      intialvalue: college,
                       isnum: false,
-                      hintText: "College",
+                      // hintText: "College",
                       icon: Icons.school,
                       labelText: "College",
                       onChanged: (value) {
@@ -107,7 +117,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                     CustomInputTile(
-                      hintText: "Phone Number",
+                      intialvalue: phone,
+                      // hintText: "Phone Number",
                       icon: Icons.book,
                       labelText: "Phone Number",
                       isnum: true,
@@ -133,7 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                     CustomInputTile(
-                      hintText: "Req Attendece",
+                      intialvalue: req_Attendece,
+                      // hintText: "Req Attendece",
                       icon: Icons.person,
                       labelText: "Req Attendece",
                       isnum: true,

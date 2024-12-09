@@ -1,4 +1,4 @@
-import 'package:attendease/screens/Profile_screen.dart';
+import 'package:attendease/screens/Profileinput.dart';
 import 'package:attendease/screens/navigator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

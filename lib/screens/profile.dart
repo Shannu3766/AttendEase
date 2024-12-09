@@ -1,6 +1,9 @@
+import 'package:attendease/screens/Profileinput.dart';
+import 'package:attendease/widgets/custome_dropdown.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -17,8 +20,9 @@ class _ProfilePageState extends State<ProfilePage> {
   var semster = "";
   var email = "";
   final user = FirebaseAuth.instance.currentUser!;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  void get_faculty_details() async {
+  void get_details() async {
     final snapshot = await FirebaseFirestore.instance
         .collection(user.uid)
         .doc("details")
@@ -35,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    get_faculty_details();
+    get_details();
     super.initState();
   }
 
@@ -146,6 +150,55 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return Container(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05),
+                      Form(
+                        key: formKey,
+                        child: CustomDropdown(
+                          hintText: "Semester",
+                          icon: FontAwesomeIcons.bookAtlas,
+                          labelText: "Semester",
+                          onChanged: (value) {
+                            setState(() {
+                              semster = value!;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Semester cannot be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      ElevatedButton.icon(
+                          onPressed: () async {
+                            var isvalid = formKey.currentState!.validate();
+                            if (!isvalid) {
+                              return;
+                            }
+                            await user.updateDisplayName(semster);
+                            await FirebaseFirestore.instance
+                                .collection(user.uid)
+                                .doc("details")
+                                .update({'semster': semster});
+                          },
+                          label: Text("Update Semster")),
+                    ],
+                  ),
+                );
+              });
+        },
+        child: const Icon(Icons.edit),
       ),
     );
   }

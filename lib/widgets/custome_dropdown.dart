@@ -29,9 +29,6 @@ class CustomDropdown extends StatelessWidget {
         borderRadius: BorderRadius.circular(40.0),
       ),
       child: ListTile(
-        // leading: CircleAvatar(
-        //     backgroundColor: Colors.blue,
-        //     child: Icon(icon, color: const Color.fromARGB(255, 255, 255, 255))),
         title: DropdownButtonFormField(
           // icon: Icon(Icons.clean_hands),
           borderRadius: BorderRadius.all(Radius.circular(20)),
