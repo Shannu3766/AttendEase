@@ -94,13 +94,14 @@ class _generatereportState extends State<generatereport> {
                     itemBuilder: (context, index) {
                       final percent = (subjects[subcodes[index]].attended) /
                           (subjects[subcodes[index]].totalclasses);
+                      final percent_val=percent*100;
                       return Card(
                           elevation: 4,
                           child: ListTile(
                             leading: Text(
                               subjects[subcodes[index]].totalclasses == 0
                                   ? "0.0 %"
-                                  : "${percent.toStringAsFixed(2)} %",
+                                  : "${percent_val.toStringAsFixed(1) } %",
                             ),
                             title: Text(subjects[subcodes[index]].subname),
                             subtitle: Text(

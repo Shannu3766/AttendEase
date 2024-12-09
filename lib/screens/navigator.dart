@@ -1,6 +1,7 @@
 import 'package:attendease/screens/AddAttendence.dart';
 import 'package:attendease/screens/Add_subjects.dart';
 import 'package:attendease/screens/Add_timtable_Screen.dart';
+import 'package:attendease/screens/profile.dart';
 import 'package:attendease/screens/report.dart';
 import 'package:flutter/material.dart';
 
@@ -12,12 +13,13 @@ class navigator extends StatefulWidget {
 }
 
 class _navigatorState extends State<navigator> {
-  int _currentIndex = 3;
+  int _currentIndex = 0;
   final List<Widget> _pages = [
     AddAttendence(),
     AddSubjectScreen(),
     AddTimetableScreen(),
     generatereport(),
+    ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,10 @@ class _navigatorState extends State<navigator> {
           BottomNavigationBarItem(
             icon: Icon(Icons.report),
             label: 'Report',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

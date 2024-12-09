@@ -6,6 +6,7 @@ class CustomInputTile extends StatelessWidget {
   final String labelText;
   final ValueChanged<String> onChanged;
   final FormFieldValidator<String>? validator;
+  final bool isnum;
 
   const CustomInputTile({
     Key? key,
@@ -14,6 +15,7 @@ class CustomInputTile extends StatelessWidget {
     required this.labelText,
     required this.onChanged,
     required this.validator,
+    required this.isnum,
   }) : super(key: key);
 
   @override
@@ -23,6 +25,7 @@ class CustomInputTile extends StatelessWidget {
       child: TextFormField(
         onChanged: onChanged,
         validator: validator,
+        keyboardType: isnum ? TextInputType.number : TextInputType.text,
         decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
             label: Text(labelText),

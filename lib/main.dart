@@ -33,9 +33,11 @@ class _MyAppState extends State<MyApp> {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              user = FirebaseAuth.instance.currentUser!;
-              // return const navigator();
-              return const ProfileScreen();
+              user = FirebaseAuth.instance.currentUser;
+              if (user!.displayName == null) {
+                return const ProfileScreen();
+              }
+              return const navigator();
             }
             return const AuthScreen();
           },

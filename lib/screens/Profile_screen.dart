@@ -21,6 +21,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var req_Attendece = "";
   var semster = "";
   final user = FirebaseAuth.instance.currentUser;
+  void get_details() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection(user!.uid)
+        .doc("details")
+        .get();
+    if (snapshot.exists) {
+      setState(() {
+        name = snapshot["name"];
+        phone = snapshot["phone"];
+        college = snapshot["college"];
+        req_Attendece = snapshot["req_Attendece"];
+        semster = snapshot["req_Attendece"];
+      });
+    }
+  }
+
   void update_details() async {
     var isvalid = formKey.currentState!.validate();
     if (!isvalid) {
@@ -34,6 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'req_Attendece': req_Attendece,
       'semster': semster,
     });
+    await user?.updateProfile(displayName: semster);
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return navigator();
     }));
@@ -56,6 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     CustomInputTile(
+                      isnum: false,
                       hintText: "Name",
                       icon: Icons.person,
                       labelText: "Name",
@@ -72,6 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                     CustomInputTile(
+                      isnum: false,
                       hintText: "College",
                       icon: Icons.school,
                       labelText: "College",
@@ -91,6 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       hintText: "Phone Number",
                       icon: Icons.book,
                       labelText: "Phone Number",
+                      isnum: true,
                       onChanged: (value) {
                         setState(() {
                           phone = value;
@@ -100,9 +120,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (value == null || value.isEmpty) {
                           return "Phone cannot be empty";
                         }
+                        try {
+                          var num = int.parse(value);
+                        } catch (e) {
+                          return "should be an integer";
+                        }
                         if (value.length != 10) {
                           return "Phone number should be of 10 digits";
                         }
+
                         return null;
                       },
                     ),
@@ -110,6 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       hintText: "Req Attendece",
                       icon: Icons.person,
                       labelText: "Req Attendece",
+                      isnum: true,
                       onChanged: (value) {
                         setState(() {
                           name = value;
@@ -118,6 +145,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Attendence cannot be empty";
+                        }
+                        try {
+                          var num = int.parse(value);
+                        } catch (e) {
+                          return "should be an integer";
                         }
                         return null;
                       },

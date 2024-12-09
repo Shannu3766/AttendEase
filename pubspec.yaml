@@ -44,6 +44,7 @@ dependencies:
   intl: ^0.20.1
   percent_indicator: ^4.2.4
   font_awesome_flutter: ^10.8.0
+  flutter_speed_dial: ^7.0.0
 
 dev_dependencies:
   flutter_test:
