@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Attendance")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc(dayId);
 
       final docSnapshot = await docRef.get();

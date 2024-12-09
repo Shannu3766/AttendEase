@@ -22,6 +22,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
   List<List<Subject>> weekData = [[], [], [], [], [], []];
   bool isloading = false;
   var _selectedIndex = 0;
+  late String Semster_num;
   Future<void> fetchSubjects() async {
     try {
       setState(() {
@@ -30,7 +31,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Subjects");
 
       final docSnapshot = await docRef.get();
@@ -88,7 +89,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Timetable");
 
       List<Map<String, dynamic>> timetableData = weekData.map((day) {
@@ -119,7 +120,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Timetable");
 
       final docSnapshot = await docRef.get();
@@ -151,6 +152,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
 
   @override
   void initState() {
+    Semster_num = user!.displayName ?? '';
     fetchSubjects();
     fetchWeekData();
     super.initState();

@@ -36,35 +36,35 @@ class CustomDropdown extends StatelessWidget {
           items: const [
             DropdownMenuItem(
               child: Text('Sem 1'),
-              value: 'Sem 1',
+              value: 'Sem1',
             ),
             DropdownMenuItem(
               child: Text('Sem 2'),
-              value: 'Sem 2',
+              value: 'Sem2',
             ),
             DropdownMenuItem(
               child: Text('Sem 3'),
-              value: 'Sem 3',
+              value: 'Sem3',
             ),
             DropdownMenuItem(
               child: Text('Sem 4'),
-              value: 'Sem 4',
+              value: 'Sem4',
             ),
             DropdownMenuItem(
               child: Text('Sem 5'),
-              value: 'Sem 5',
+              value: 'Sem5',
             ),
             DropdownMenuItem(
               child: Text('Sem 6'),
-              value: 'Sem 6',
+              value: 'Sem6',
             ),
             DropdownMenuItem(
               child: Text('Sem 7'),
-              value: 'Sem 7',
+              value: 'Sem7',
             ),
             DropdownMenuItem(
-              child: Text('Sem 7'),
-              value: 'Sem 8',
+              child: Text('Sem 8'),
+              value: 'Sem8',
             ),
           ],
           onChanged: onChanged,

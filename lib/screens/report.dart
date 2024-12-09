@@ -1,9 +1,7 @@
-import 'package:attendease/Classes/class_subject.dart';
 import 'package:attendease/Classes/report_class.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class generatereport extends StatefulWidget {
   const generatereport({super.key});
@@ -16,14 +14,16 @@ class _generatereportState extends State<generatereport> {
   final user = FirebaseAuth.instance.currentUser;
   var subjects = {};
   var subcodes = [];
+  String Semster_num = "";
   void getsubjects() async {
     final snapshot = await FirebaseFirestore.instance
         .collection(user!.uid)
         .doc("Semester")
-        .collection("Sem1")
+        .collection(Semster_num)
         .doc("Subjects")
         .get();
-    if (snapshot["subjects"].isNotEmpty) {
+
+    if (snapshot.exists && snapshot["subjects"].isNotEmpty) {
       for (var doc in snapshot["subjects"]) {
         subjects[doc['subcode']] = attendecereport(
           subname: doc['subname'],
@@ -42,7 +42,7 @@ class _generatereportState extends State<generatereport> {
     final snapshot = await FirebaseFirestore.instance
         .collection(user!.uid)
         .doc("Attendence")
-        .collection("sem1")
+        .collection("$Semster_num")
         .get();
     if (snapshot.docs.isNotEmpty) {
       setState(() {
@@ -72,6 +72,7 @@ class _generatereportState extends State<generatereport> {
   }
 
   void initState() {
+    Semster_num = user!.displayName ?? '';
     getsubjects();
     getreport();
     super.initState();
@@ -85,56 +86,58 @@ class _generatereportState extends State<generatereport> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 1,
-                child: ListView.builder(
-                    itemCount: subcodes.length,
-                    itemBuilder: (context, index) {
-                      final percent = (subjects[subcodes[index]].attended) /
-                          (subjects[subcodes[index]].totalclasses);
-                      final percent_val=percent*100;
-                      return Card(
-                          elevation: 4,
-                          child: ListTile(
-                            leading: Text(
-                              subjects[subcodes[index]].totalclasses == 0
-                                  ? "0.0 %"
-                                  : "${percent_val.toStringAsFixed(1) } %",
-                            ),
-                            title: Text(subjects[subcodes[index]].subname),
-                            subtitle: Text(
-                                "att/tot: ${subjects[subcodes[index]].attended}/${subjects[subcodes[index]].totalclasses}"),
-                            trailing: TweenAnimationBuilder(
-                              tween: Tween<double>(
-                                begin: 0.0, // Animation starts from 0
-                                end: ((subjects[subcodes[index]]
-                                            .totalclasses) ==
-                                        0)
-                                    ? 0.5
-                                    : (subjects[subcodes[index]].attended /
-                                        subjects[subcodes[index]].totalclasses),
-                              ),
-                              duration: const Duration(seconds: 1),
-                              builder: (context, double value, child) {
-                                return CircularProgressIndicator(
-                                  value: value,
-                                  color:
-                                      value < 0.75 ? Colors.red : Colors.green,
-                                );
-                              },
-                            ),
-                          ));
-                    }),
-              ),
-              // ElevatedButton(
-              //     onPressed: () {
-              //       print_data();
-              //     },
-              //     child: Text("print data"))
-            ],
-          ),
+          child: subjects.isEmpty
+              ? Text("No subjects added")
+              : Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 1,
+                      child: ListView.builder(
+                          itemCount: subcodes.length,
+                          itemBuilder: (context, index) {
+                            final percent =
+                                (subjects[subcodes[index]].attended) /
+                                    (subjects[subcodes[index]].totalclasses);
+                            final percent_val = percent * 100;
+                            return Card(
+                                elevation: 4,
+                                child: ListTile(
+                                  leading: Text(
+                                    subjects[subcodes[index]].totalclasses == 0
+                                        ? "0.0 %"
+                                        : "${percent_val.toStringAsFixed(1)} %",
+                                  ),
+                                  title:
+                                      Text(subjects[subcodes[index]].subname),
+                                  subtitle: Text(
+                                      "att/tot: ${subjects[subcodes[index]].attended}/${subjects[subcodes[index]].totalclasses}"),
+                                  trailing: TweenAnimationBuilder(
+                                    tween: Tween<double>(
+                                      begin: 0.0, // Animation starts from 0
+                                      end: ((subjects[subcodes[index]]
+                                                  .totalclasses) ==
+                                              0)
+                                          ? 0.5
+                                          : (subjects[subcodes[index]]
+                                                  .attended /
+                                              subjects[subcodes[index]]
+                                                  .totalclasses),
+                                    ),
+                                    duration: const Duration(seconds: 1),
+                                    builder: (context, double value, child) {
+                                      return CircularProgressIndicator(
+                                        value: value,
+                                        color: value < 0.75
+                                            ? Colors.red
+                                            : Colors.green,
+                                      );
+                                    },
+                                  ),
+                                ));
+                          }),
+                    ),
+                  ],
+                ),
         ),
       ),
     );

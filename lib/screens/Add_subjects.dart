@@ -18,8 +18,10 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
   String subjectCode = "";
   String subjectTitle = "";
   bool isloading = false;
+  late String Semster_num;
   @override
   void initState() {
+    Semster_num = user!.displayName ?? '';
     fetchSubjects();
     super.initState();
     _focusNode.addListener(() {
@@ -35,7 +37,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Subjects");
 
       final docSnapshot = await docRef.get();
@@ -66,7 +68,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
       FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Subjects")
           .collection(subjects[i].subname)
           .doc("Attendence")
@@ -91,7 +93,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Subjects");
 
       // Overwrite the document with the new data (delete old and write new)

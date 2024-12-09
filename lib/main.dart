@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.hasData) {
               user = FirebaseAuth.instance.currentUser;
               if (user!.displayName == null) {
-                return const ProfileScreen();
+              return const ProfileScreen();
               }
               return const navigator();
             }

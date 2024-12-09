@@ -18,10 +18,12 @@ class _AddAttendenceState extends State<AddAttendence> {
   bool isdaydataavaliable = false;
   int index_day = -1;
   List<Subject> subjects = [];
+  late String Semster_num;
   final user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
+    Semster_num = user!.displayName ?? '';
     fetchSubjects();
     initializeData();
     super.initState();
@@ -39,7 +41,7 @@ class _AddAttendenceState extends State<AddAttendence> {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Subjects");
 
       final docSnapshot = await docRef.get();
@@ -123,7 +125,7 @@ class _AddAttendenceState extends State<AddAttendence> {
       final snapshot = await FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Semester")
-          .collection("Sem1")
+          .collection(Semster_num)
           .doc("Timetable")
           .get();
 
@@ -155,7 +157,7 @@ class _AddAttendenceState extends State<AddAttendence> {
       final snapshot = await FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Attendence")
-          .collection("sem1")
+          .collection(Semster_num)
           .doc(day)
           .get();
 
@@ -204,7 +206,7 @@ class _AddAttendenceState extends State<AddAttendence> {
       await FirebaseFirestore.instance
           .collection(user!.uid)
           .doc("Attendence")
-          .collection("sem1")
+          .collection(Semster_num)
           .doc(day)
           .set({"subjects": serializedAttendance});
 
@@ -229,7 +231,7 @@ class _AddAttendenceState extends State<AddAttendence> {
           CircleAvatar(
             child: IconButton(
                 onPressed: () {
-                  attendece.isNotEmpty ? update_attendece : null;
+                  update_attendece();
                 },
                 icon: const Icon(Icons.save)),
           ),
