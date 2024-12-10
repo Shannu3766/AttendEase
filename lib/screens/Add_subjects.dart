@@ -1,4 +1,5 @@
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -226,6 +227,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: drawer_wid(),
       appBar: AppBar(
         title: Text(
           "AttendEase",

@@ -1,4 +1,5 @@
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -163,6 +164,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
     List<Subject> day_time = weekData[_selectedIndex];
     return MaterialApp(
       home: Scaffold(
+        drawer: drawer_wid(),
         appBar: AppBar(
           title: Text("Highlight CircleAvatar"),
           actions: [

@@ -1,5 +1,6 @@
 import 'package:attendease/Classes/attendece.dart';
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -255,124 +256,11 @@ class _AddAttendenceState extends State<AddAttendence> {
     }
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: const Text('Attendance Tracker'),
-  //       actions: [
-  //         CircleAvatar(
-  //           child: IconButton(
-  //               onPressed: () {
-  //                 update_attendece();
-  //               },
-  //               icon: const Icon(Icons.save)),
-  //         ),
-  //         const SizedBox(width: 16),
-  //       ],
-  //     ),
-  //     body: SingleChildScrollView(
-  //       child: Center(
-  //         child: Column(
-  //           children: [
-  //             const SizedBox(height: 16),
-  //             const SizedBox(width: 16),
-  //             Text(
-  //               "Date: $formattedDate",
-  //               style:
-  //                   const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-  //             ),
-  //             const SizedBox(height: 20),
-  //             attendece.isNotEmpty
-  //                 ? SizedBox(
-  //                     height: MediaQuery.of(context).size.height * 0.7,
-  //                     child: ListView.builder(
-  //                       itemCount: attendece.length,
-  //                       itemBuilder: (context, index) {
-  //                         return Card(
-  //                           margin: const EdgeInsets.symmetric(vertical: 8.0),
-  //                           child: ListTile(
-  //                             title: Text(attendece[index].subname),
-  //                             subtitle: Text(attendece[index].subcode),
-  //                             trailing: Checkbox(
-  //                               value: attendece[index].attended,
-  //                               onChanged: (value) {
-  //                                 setState(() {
-  //                                   attendece[index].attended = value!;
-  //                                 });
-  //                               },
-  //                             ),
-  //                             leading: IconButton(
-  //                               onPressed: () {
-  //                                 setState(() {
-  //                                   attendece.removeAt(index);
-  //                                 });
-  //                               },
-  //                               icon: const Icon(Icons.delete),
-  //                             ),
-  //                           ),
-  //                         );
-  //                       },
-  //                     ),
-  //                   )
-  //                 : const Center(
-  //                     child: Text(
-  //                       "It's a Holiday...",
-  //                       style: TextStyle(fontSize: 24),
-  //                     ),
-  //                   ),
-  //             const SizedBox(height: 16),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //     floatingActionButton: SpeedDial(
-  //       animatedIcon: AnimatedIcons.menu_close,
-  //       backgroundColor: Colors.blue,
-  //       children: [
-  //         SpeedDialChild(
-  //           child: const Icon(Icons.calendar_today, color: Colors.white),
-  //           backgroundColor: Colors.green,
-  //           label: 'Select Date',
-  //           onTap: () async {
-  //             final picked = await showDatePicker(
-  //               context: context,
-  //               initialDate: selectedDate,
-  //               firstDate: DateTime(2000),
-  //               lastDate: DateTime.now(),
-  //             );
-  //             if (picked != null) {
-  //               setState(() {
-  //                 selectedDate = picked;
-  //               });
-  //               update_index_day();
-  //               await get_day_data_firebase();
-  //             }
-  //           },
-  //         ),
-  //         SpeedDialChild(
-  //           child: const Icon(Icons.add, color: Colors.white),
-  //           backgroundColor: Colors.orange,
-  //           label: 'Add Subject',
-  //           onTap: () async {
-  //             add_subject();
-  //           },
-  //         ),
-  //         SpeedDialChild(
-  //           child: const Icon(Icons.upload, color: Colors.white),
-  //           backgroundColor: Colors.purple,
-  //           label: 'Upload Attendance',
-  //           onTap: () => update_attendece(),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
     return Scaffold(
+      drawer: drawer_wid(),
       appBar: AppBar(
         title: const Text('Attendance Tracker',
             style: TextStyle(fontWeight: FontWeight.bold)),

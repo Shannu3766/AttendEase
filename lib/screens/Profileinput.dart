@@ -83,7 +83,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     CustomInputTile(
                       intialvalue: name,
                       isnum: false,
-                      // hintText: "Name",
                       icon: Icons.person,
                       labelText: "Name",
                       onChanged: (value) {
@@ -151,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       isnum: true,
                       onChanged: (value) {
                         setState(() {
-                          name = value;
+                          req_Attendece = value;
                         });
                       },
                       validator: (value) {
