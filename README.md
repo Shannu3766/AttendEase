@@ -139,13 +139,6 @@ We welcome contributions! If you'd like to contribute, please follow these steps
    ```
 5. Submit a pull request.
 
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
 
 ## Contact
 
