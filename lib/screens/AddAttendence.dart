@@ -1,10 +1,10 @@
 import 'package:attendease/Classes/attendece.dart';
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/widgets/styledelevatedbutton.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 
 class AddAttendence extends StatefulWidget {
@@ -256,13 +256,29 @@ class _AddAttendenceState extends State<AddAttendence> {
     }
   }
 
+  void selectdate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+      });
+      update_index_day();
+      await get_day_data_firebase();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
     return Scaffold(
       drawer: drawer_wid(),
       appBar: AppBar(
-        title: const Text('Attendance Tracker',
+        title: const Text('Attendease',
             style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
@@ -270,31 +286,67 @@ class _AddAttendenceState extends State<AddAttendence> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Selected Date:",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 12.0),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(12.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            blurRadius: 8.0,
+                            offset: const Offset(0, 4), // Shadow position
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Selected Date:",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          Text(
+                            formattedDate,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      formattedDate,
-                      style: const TextStyle(fontSize: 16, color: Colors.blue),
+                  ),
+                  const SizedBox(
+                      width: 12.0), // Spacing between container and button
+                  CircleAvatar(
+                    radius: 24.0,
+                    backgroundColor: Colors.blue,
+                    child: IconButton(
+                      onPressed: () {
+                        selectdate();
+                      },
+                      icon: const Icon(
+                        Icons.calendar_month,
+                        color: Colors.white,
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.64,
+                height: MediaQuery.of(context).size.height * 0.7,
                 child: attendece.isNotEmpty
                     ? ListView.separated(
                         itemCount: attendece.length,
@@ -360,82 +412,28 @@ class _AddAttendenceState extends State<AddAttendence> {
                         ],
                       ),
               ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  update_attendece();
-                },
-                icon: const Icon(
-                  Icons.save,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  "Update",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  Expanded(
+                    child: Custom_ElevatedButtonicon(
+                      function: add_subject,
+                      icon: Icons.add,
+                      text: "Add Sub",
+                    ),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Button color
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 12, horizontal: 20), // Padding
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30), // Rounded corners
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Custom_ElevatedButtonicon(
+                      function: update_attendece,
+                      icon: Icons.save,
+                      text: "Save",
+                    ),
                   ),
-                  elevation: 5, // Shadow effect
-                  textStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+                ],
               )
             ],
           ),
         ),
-      ),
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        backgroundColor: Colors.blue,
-        overlayColor: Colors.black,
-        overlayOpacity: 0.5,
-        children: [
-          SpeedDialChild(
-            child: const Icon(Icons.calendar_today, color: Colors.white),
-            backgroundColor: Colors.green,
-            label: 'Select Date',
-            labelBackgroundColor: Colors.white,
-            onTap: () async {
-              final picked = await showDatePicker(
-                context: context,
-                initialDate: selectedDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime.now(),
-              );
-              if (picked != null) {
-                setState(() {
-                  selectedDate = picked;
-                });
-                update_index_day();
-                await get_day_data_firebase();
-              }
-            },
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.add, color: Colors.white),
-            backgroundColor: Colors.orange,
-            label: 'Add Subject',
-            labelBackgroundColor: Colors.white,
-            onTap: add_subject,
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.upload, color: Colors.white),
-            backgroundColor: Colors.purple,
-            label: 'Upload Attendance',
-            labelBackgroundColor: Colors.white,
-            onTap: update_attendece,
-          ),
-        ],
       ),
     );
   }

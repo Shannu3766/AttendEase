@@ -18,58 +18,55 @@ class CustomDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      // padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: const Color.fromARGB(255, 0, 0, 0),
-          width: 1.0,
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: DropdownButtonFormField<String>(
+        hint: Text(hintText, style: TextStyle(color: Colors.deepPurple)),
+        icon: Icon(icon, color: Colors.deepPurple),
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(color: Colors.deepPurple),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide(color: Colors.deepPurple),
+          ),
         ),
-        borderRadius: BorderRadius.circular(40.0),
-      ),
-      child: ListTile(
-        title: DropdownButtonFormField(
-          // icon: Icon(Icons.clean_hands),
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          hint: Text(hintText),
-          items: const [
-            DropdownMenuItem(
-              child: Text('Sem 1'),
-              value: 'Sem1',
-            ),
-            DropdownMenuItem(
-              child: Text('Sem 2'),
-              value: 'Sem2',
-            ),
-            DropdownMenuItem(
-              child: Text('Sem 3'),
-              value: 'Sem3',
-            ),
-            DropdownMenuItem(
-              child: Text('Sem 4'),
-              value: 'Sem4',
-            ),
-            DropdownMenuItem(
-              child: Text('Sem 5'),
-              value: 'Sem5',
-            ),
-            DropdownMenuItem(
-              child: Text('Sem 6'),
-              value: 'Sem6',
-            ),
-            DropdownMenuItem(
-              child: Text('Sem 7'),
-              value: 'Sem7',
-            ),
-            DropdownMenuItem(
-              child: Text('Sem 8'),
-              value: 'Sem8',
-            ),
-          ],
-          onChanged: onChanged,
-          validator: validator,
-        ),
+        onChanged: onChanged,
+        validator: validator,
+        items: const [
+          DropdownMenuItem(
+            value: 'Sem1',
+            child: Text('Sem 1'),
+          ),
+          DropdownMenuItem(
+            value: 'Sem2',
+            child: Text('Sem 2'),
+          ),
+          DropdownMenuItem(
+            value: 'Sem3',
+            child: Text('Sem 3'),
+          ),
+          DropdownMenuItem(
+            value: 'Sem4',
+            child: Text('Sem 4'),
+          ),
+          DropdownMenuItem(
+            value: 'Sem5',
+            child: Text('Sem 5'),
+          ),
+          DropdownMenuItem(
+            value: 'Sem6',
+            child: Text('Sem 6'),
+          ),
+          DropdownMenuItem(
+            value: 'Sem7',
+            child: Text('Sem 7'),
+          ),
+          DropdownMenuItem(
+            value: 'Sem8',
+            child: Text('Sem 8'),
+          ),
+        ],
       ),
     );
   }

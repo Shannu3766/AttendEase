@@ -1,4 +1,5 @@
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/widgets/styledelevatedbutton.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -229,91 +230,114 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     return Scaffold(
       drawer: drawer_wid(),
       appBar: AppBar(
-        title: Text(
-          "AttendEase",
-          style: GoogleFonts.pacifico(
-            fontSize: 48,
-          ),
-        ),
+        title:
+            Text("AttendEase", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
-      body: Column(
-        children: [
-          isloading
-              ? const Center(child: CircularProgressIndicator())
-              : Expanded(
-                  flex: 2,
-                  child: subjects.isEmpty
-                      ? const Center(child: Text("No subjects added yet"))
-                      : ListView.builder(
-                          itemCount: subjects.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: Card(
-                                elevation: 4,
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: ListTile(
-                                  title: Text(subjects[index].subname),
-                                  subtitle:
-                                      Text('Code: ${subjects[index].subcode}'),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      setState(() {
-                                        subjects.removeAt(index);
-                                      });
-                                    },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            isloading
+                ? const Center(child: CircularProgressIndicator())
+                : SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: subjects.isEmpty
+                        ? const Center(child: Text("No subjects added yet"))
+                        : ListView.separated(
+                            itemCount: subjects.length,
+                            separatorBuilder: (context, index) =>
+                                Divider(color: Colors.grey.shade300),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 14),
+                                child: Card(
+                                  elevation: 4,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(12.0),
+                                    title: Text(
+                                      subjects[index].subname,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(
+                                      'Code: ${subjects[index].subcode}',
+                                      style: const TextStyle(
+                                          fontSize: 14, color: Colors.grey),
+                                    ),
+                                    trailing: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          subjects.removeAt(index);
+                                        });
+                                      },
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red),
+                                    ),
+                                    // leading:
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
-          !isloading
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 18.0, right: 18.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue),
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              showAddSubjectScreen();
+                              );
                             },
-                            label: const Text(
-                              "Add Subject",
-                              style: TextStyle(color: Colors.white),
-                            )),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green),
-                        onPressed: saveSubjects,
-                        icon: Icon(
-                          Icons.save,
-                          color: Colors.white,
+                          )
+
+                    // : ListView.separated(
+                    //     itemCount: subjects.length,
+                    //     separatorBuilder: (context, index) =>
+                    //         Divider(color: Colors.grey.shade300),
+                    //     itemBuilder: (context, index) {
+                    //       return Card(
+                    //         elevation: 4,
+                    //         margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    //         shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(10)),
+                    //         child: ListTile(
+                    //           title: Text(subjects[index].subname),
+                    //           subtitle:
+                    //               Text('Code: ${subjects[index].subcode}'),
+                    //           trailing: IconButton(
+                    //             icon: const Icon(Icons.delete),
+                    //             onPressed: () {
+                    //               setState(() {
+                    //                 subjects.removeAt(index);
+                    //               });
+                    //             },
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    ),
+            !isloading
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Custom_ElevatedButtonicon(
+                            function: saveSubjects,
+                            icon: Icons.save,
+                            text: "Save",
+                          ),
                         ),
-                        label: const Text(
-                          "Save Subjects",
-                          style: TextStyle(color: Colors.white),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Custom_ElevatedButtonicon(
+                            function: showAddSubjectScreen,
+                            icon: Icons.add,
+                            text: "Add Sub",
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              : Text(""),
-        ],
+                      ],
+                    ),
+                  )
+                : Text(""),
+          ],
+        ),
       ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {

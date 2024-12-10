@@ -87,6 +87,7 @@
 //   }
 // }
 
+import 'package:attendease/providers/name_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:attendease/screens/AddAttendence.dart';
@@ -94,6 +95,7 @@ import 'package:attendease/screens/Add_subjects.dart';
 import 'package:attendease/screens/Add_timtable_Screen.dart';
 import 'package:attendease/screens/profile.dart';
 import 'package:attendease/screens/report.dart';
+import 'package:provider/provider.dart';
 
 class drawer_wid extends StatefulWidget {
   const drawer_wid({super.key});
@@ -114,7 +116,7 @@ class _drawer_widState extends State<drawer_wid> {
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.blueAccent),
             accountName: Text(
-              user?.displayName ?? "User Name",
+              "${context.watch<NameProvider>().name}" ?? "User Name",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             accountEmail: Text(

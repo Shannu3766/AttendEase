@@ -1,6 +1,7 @@
 import 'package:attendease/screens/navigator.dart';
 import 'package:attendease/widgets/CustomInputTile.dart';
 import 'package:attendease/widgets/custome_dropdown.dart';
+import 'package:attendease/widgets/styledelevatedbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -68,18 +69,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('Attendease'),
       ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
-            ),
             Form(
                 key: formKey,
                 child: Column(
                   children: [
+                    Image.asset(
+                      "assests/images/appicon.png",
+                      height: MediaQuery.of(context).size.height * 0.23,
+                    ),
                     CustomInputTile(
                       intialvalue: name,
                       isnum: false,
@@ -186,25 +188,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(
               height: 20,
             ),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                iconColor: Colors.white,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Custom_ElevatedButtonicon(
+                function: update_details,
+                icon: Icons.upload,
+                text: "Submit",
               ),
-              icon: const Icon(Icons.upload),
-              onPressed: () {
-                update_details();
-              },
-              label: const Text(
-                "Submit",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            TextButton(
-                onPressed: () {
-                  print(user);
-                },
-                child: Text("shnnu"))
+            )
           ]),
         ),
       ),

@@ -58,20 +58,21 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 20),
               // Profile Picture with Border
               Container(
-                width: MediaQuery.of(context).size.width * 0.4,
-                height: MediaQuery.of(context).size.width * 0.4,
+                width: MediaQuery.of(context).size.width * 0.35,
+                height: MediaQuery.of(context).size.width * 0.35,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: Colors.black,
-                    width: 5.0,
+                    width: 4.0,
                   ),
                 ),
-                child: const CircleAvatar(
-                  // foregroundImage: NetworkImage(imageurl),
-                  backgroundImage: const NetworkImage(
-                      'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
-                  backgroundColor: Colors.black,
+                child: CircleAvatar(
+                  //
+                  backgroundImage: user?.photoURL != null
+                      ? NetworkImage(user!.photoURL!)
+                      : NetworkImage(
+                          'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
                 ),
               ),
               const SizedBox(height: 20),
@@ -81,6 +82,24 @@ class _ProfilePageState extends State<ProfilePage> {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Email & Phone
+              Text(
+                email,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                phone,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
                 ),
               ),
               const SizedBox(height: 20),
@@ -106,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         title: const Text('Phone'),
                         subtitle: Text(phone),
                       ),
-                      Divider(),
+                      const Divider(),
                       ListTile(
                         leading: const Icon(Icons.location_city),
                         title: const Text('College'),
@@ -115,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       const Divider(),
                       ListTile(
                         leading: const Icon(Icons.school),
-                        title: const Text('Semster'),
+                        title: const Text('Semester'),
                         subtitle: Text(semster),
                       ),
                     ],
@@ -124,15 +143,14 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               // Logout Button
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ElevatedButton(
                   onPressed: () {
                     FirebaseAuth.instance.signOut();
                     // Redirect to login screen
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    // primarycol: Colors.red, // Red color for logout
+                    backgroundColor: Colors.redAccent,
                     padding: const EdgeInsets.symmetric(
                         vertical: 12.0, horizontal: 32.0),
                     shape: RoundedRectangleBorder(
@@ -148,6 +166,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
@@ -158,6 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
               context: context,
               builder: (context) {
                 return Container(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
                       SizedBox(
@@ -183,33 +205,36 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton.icon(
-                          onPressed: () async {
-                            var isvalid = formKey.currentState!.validate();
-                            if (!isvalid) {
-                              return;
-                            }
-                            Navigator.of(context).pop();
-                            await user.updateDisplayName(semster);
-                            await FirebaseFirestore.instance
-                                .collection(user.uid)
-                                .doc("details")
-                                .update({'semster': semster});
-                          },
-                          label: Text("Update Semster")),
+                        onPressed: () async {
+                          var isValid = formKey.currentState!.validate();
+                          if (!isValid) {
+                            return;
+                          }
+                          Navigator.of(context).pop();
+                          await user.updateDisplayName(semster);
+                          await FirebaseFirestore.instance
+                              .collection(user.uid)
+                              .doc("details")
+                              .update({'semster': semster});
+                        },
+                        label: const Text("Update Semester"),
+                        icon: const Icon(Icons.update),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12.0, horizontal: 32.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 );
               });
         },
-        child: const Column(
-          children: [
-            const SizedBox(
-              height: 4,
-            ),
-            Icon(Icons.edit),
-            const Text("Update ")
-          ],
-        ),
+        child: const Icon(Icons.edit),
+        backgroundColor: Colors.blueAccent,
       ),
     );
   }
