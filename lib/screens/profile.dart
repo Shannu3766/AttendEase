@@ -180,12 +180,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                       ),
+                      const SizedBox(height: 20),
                       ElevatedButton.icon(
                           onPressed: () async {
                             var isvalid = formKey.currentState!.validate();
                             if (!isvalid) {
                               return;
                             }
+                            Navigator.of(context).pop();
                             await user.updateDisplayName(semster);
                             await FirebaseFirestore.instance
                                 .collection(user.uid)
@@ -198,7 +200,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 );
               });
         },
-        child: const Icon(Icons.edit),
+        child: const Column(
+          children: [
+            const SizedBox(
+              height: 4,
+            ),
+            Icon(Icons.edit),
+            const Text("Update ")
+          ],
+        ),
       ),
     );
   }

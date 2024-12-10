@@ -13,7 +13,7 @@ class navigator extends StatefulWidget {
 }
 
 class _navigatorState extends State<navigator> {
-  int _currentIndex = 4;
+  int _currentIndex = 0;
   final List<Widget> _pages = [
     AddAttendence(),
     AddSubjectScreen(),

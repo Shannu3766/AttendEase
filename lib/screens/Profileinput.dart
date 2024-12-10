@@ -200,7 +200,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 "Submit",
                 style: TextStyle(color: Colors.white),
               ),
-            )
+            ),
+            TextButton(
+                onPressed: () {
+                  print(user);
+                },
+                child: Text("shnnu"))
           ]),
         ),
       ),

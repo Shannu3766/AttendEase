@@ -66,47 +66,81 @@ class _AddAttendenceState extends State<AddAttendence> {
 
   void add_subject() {
     showModalBottomSheet(
-        context: context,
-        isDismissible: true,
-        builder: (context) {
-          return Column(
+      context: context,
+      isDismissible: true,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
             children: [
               const SizedBox(height: 10),
+              const Text(
+                'Select a Subject',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+              ),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
-                    itemCount: subjects.length,
-                    itemBuilder: (cotext, index) {
-                      return InkWell(
-                        onTap: () {
-                          setState(() {
-                            attendece.add(Attendece(
-                              subname: subjects[index].subname,
-                              subcode: subjects[index].subcode,
-                              attended: true,
-                            ));
-                            Navigator.pop(context);
-                          });
-                        },
-                        child: Card(
-                          elevation: 4,
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
-                            title: Text(
-                              subjects[index].subname,
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              'Code: ${subjects[index].subcode}',
-                              style: const TextStyle(color: Colors.black),
+                  itemCount: subjects.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          attendece.add(Attendece(
+                            subname: subjects[index].subname,
+                            subcode: subjects[index].subcode,
+                            attended: true,
+                          ));
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: Card(
+                        elevation: 4,
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 12.0),
+                          title: Text(
+                            subjects[index].subname,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
+                          subtitle: Text(
+                            'Code: ${subjects[index].subcode}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.check_circle_outline,
+                            color: Colors.green,
+                          ),
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   void update_index_day() {
@@ -221,74 +255,253 @@ class _AddAttendenceState extends State<AddAttendence> {
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: const Text('Attendance Tracker'),
+  //       actions: [
+  //         CircleAvatar(
+  //           child: IconButton(
+  //               onPressed: () {
+  //                 update_attendece();
+  //               },
+  //               icon: const Icon(Icons.save)),
+  //         ),
+  //         const SizedBox(width: 16),
+  //       ],
+  //     ),
+  //     body: SingleChildScrollView(
+  //       child: Center(
+  //         child: Column(
+  //           children: [
+  //             const SizedBox(height: 16),
+  //             const SizedBox(width: 16),
+  //             Text(
+  //               "Date: $formattedDate",
+  //               style:
+  //                   const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //             ),
+  //             const SizedBox(height: 20),
+  //             attendece.isNotEmpty
+  //                 ? SizedBox(
+  //                     height: MediaQuery.of(context).size.height * 0.7,
+  //                     child: ListView.builder(
+  //                       itemCount: attendece.length,
+  //                       itemBuilder: (context, index) {
+  //                         return Card(
+  //                           margin: const EdgeInsets.symmetric(vertical: 8.0),
+  //                           child: ListTile(
+  //                             title: Text(attendece[index].subname),
+  //                             subtitle: Text(attendece[index].subcode),
+  //                             trailing: Checkbox(
+  //                               value: attendece[index].attended,
+  //                               onChanged: (value) {
+  //                                 setState(() {
+  //                                   attendece[index].attended = value!;
+  //                                 });
+  //                               },
+  //                             ),
+  //                             leading: IconButton(
+  //                               onPressed: () {
+  //                                 setState(() {
+  //                                   attendece.removeAt(index);
+  //                                 });
+  //                               },
+  //                               icon: const Icon(Icons.delete),
+  //                             ),
+  //                           ),
+  //                         );
+  //                       },
+  //                     ),
+  //                   )
+  //                 : const Center(
+  //                     child: Text(
+  //                       "It's a Holiday...",
+  //                       style: TextStyle(fontSize: 24),
+  //                     ),
+  //                   ),
+  //             const SizedBox(height: 16),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //     floatingActionButton: SpeedDial(
+  //       animatedIcon: AnimatedIcons.menu_close,
+  //       backgroundColor: Colors.blue,
+  //       children: [
+  //         SpeedDialChild(
+  //           child: const Icon(Icons.calendar_today, color: Colors.white),
+  //           backgroundColor: Colors.green,
+  //           label: 'Select Date',
+  //           onTap: () async {
+  //             final picked = await showDatePicker(
+  //               context: context,
+  //               initialDate: selectedDate,
+  //               firstDate: DateTime(2000),
+  //               lastDate: DateTime.now(),
+  //             );
+  //             if (picked != null) {
+  //               setState(() {
+  //                 selectedDate = picked;
+  //               });
+  //               update_index_day();
+  //               await get_day_data_firebase();
+  //             }
+  //           },
+  //         ),
+  //         SpeedDialChild(
+  //           child: const Icon(Icons.add, color: Colors.white),
+  //           backgroundColor: Colors.orange,
+  //           label: 'Add Subject',
+  //           onTap: () async {
+  //             add_subject();
+  //           },
+  //         ),
+  //         SpeedDialChild(
+  //           child: const Icon(Icons.upload, color: Colors.white),
+  //           backgroundColor: Colors.purple,
+  //           label: 'Upload Attendance',
+  //           onTap: () => update_attendece(),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Attendance Tracker'),
-        actions: [
-          CircleAvatar(
-            child: IconButton(
-                onPressed: () {
-                  update_attendece();
-                },
-                icon: const Icon(Icons.save)),
-          ),
-          const SizedBox(width: 16),
-        ],
+        title: const Text('Attendance Tracker',
+            style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
-        child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const SizedBox(height: 16),
-              const SizedBox(width: 16),
-              Text(
-                "Date: $formattedDate",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Selected Date:",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      formattedDate,
+                      style: const TextStyle(fontSize: 16, color: Colors.blue),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              attendece.isNotEmpty
-                  ? SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: ListView.builder(
+              const SizedBox(height: 16),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.64,
+                child: attendece.isNotEmpty
+                    ? ListView.separated(
                         itemCount: attendece.length,
+                        separatorBuilder: (context, index) =>
+                            Divider(color: Colors.grey.shade300),
                         itemBuilder: (context, index) {
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ListTile(
-                              title: Text(attendece[index].subname),
-                              subtitle: Text(attendece[index].subcode),
-                              trailing: Checkbox(
-                                value: attendece[index].attended,
-                                onChanged: (value) {
-                                  setState(() {
-                                    attendece[index].attended = value!;
-                                  });
-                                },
-                              ),
-                              leading: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    attendece.removeAt(index);
-                                  });
-                                },
-                                icon: const Icon(Icons.delete),
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                attendece[index].attended =
+                                    !attendece[index].attended;
+                              });
+                            },
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(12.0),
+                                title: Text(
+                                  attendece[index].subname,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  attendece[index].subcode,
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                ),
+                                trailing: Checkbox(
+                                  value: attendece[index].attended,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      attendece[index].attended = value!;
+                                    });
+                                  },
+                                ),
+                                leading: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      attendece.removeAt(index);
+                                    });
+                                  },
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                ),
                               ),
                             ),
                           );
                         },
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.beach_access,
+                              size: 100, color: Colors.blue),
+                          SizedBox(height: 20),
+                          Text(
+                            "It's a Holiday...",
+                            style: TextStyle(fontSize: 24, color: Colors.grey),
+                          ),
+                        ],
                       ),
-                    )
-                  : const Center(
-                      child: Text(
-                        "It's a Holiday...",
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-              const SizedBox(height: 16),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  update_attendece();
+                },
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.white,
+                ),
+                label: const Text(
+                  "Update",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Button color
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12, horizontal: 20), // Padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30), // Rounded corners
+                  ),
+                  elevation: 5, // Shadow effect
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -296,11 +509,14 @@ class _AddAttendenceState extends State<AddAttendence> {
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,
         backgroundColor: Colors.blue,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.5,
         children: [
           SpeedDialChild(
             child: const Icon(Icons.calendar_today, color: Colors.white),
             backgroundColor: Colors.green,
             label: 'Select Date',
+            labelBackgroundColor: Colors.white,
             onTap: () async {
               final picked = await showDatePicker(
                 context: context,
@@ -321,15 +537,15 @@ class _AddAttendenceState extends State<AddAttendence> {
             child: const Icon(Icons.add, color: Colors.white),
             backgroundColor: Colors.orange,
             label: 'Add Subject',
-            onTap: () async {
-              add_subject();
-            },
+            labelBackgroundColor: Colors.white,
+            onTap: add_subject,
           ),
           SpeedDialChild(
             child: const Icon(Icons.upload, color: Colors.white),
             backgroundColor: Colors.purple,
             label: 'Upload Attendance',
-            onTap: () => update_attendece(),
+            labelBackgroundColor: Colors.white,
+            onTap: update_attendece,
           ),
         ],
       ),
