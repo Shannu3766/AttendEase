@@ -1,8 +1,10 @@
 import 'package:attendease/Classes/report_class.dart';
+import 'package:attendease/providers/minimum_percent.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class generatereport extends StatefulWidget {
   const generatereport({super.key});
@@ -144,7 +146,7 @@ class _generatereportState extends State<generatereport> {
                                   end: (subjects[subcodes[index]]
                                               .totalclasses ==
                                           0)
-                                      ? 0.5
+                                      ? 0.0
                                       : (subjects[subcodes[index]].attended /
                                           subjects[subcodes[index]]
                                               .totalclasses),
@@ -153,7 +155,10 @@ class _generatereportState extends State<generatereport> {
                                 builder: (context, double value, child) {
                                   return CircularProgressIndicator(
                                     value: value,
-                                    color: value < 0.75
+                                    color: percent_val <
+                                            context
+                                                .watch<PercentProvider>()
+                                                .percent
                                         ? Colors.red
                                         : Colors.green,
                                     strokeWidth:

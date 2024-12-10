@@ -155,7 +155,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                     textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
-                      hintText: "Subject List",
+                      hintText: "Subject Name",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(10.0),
@@ -319,17 +319,17 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                       children: [
                         Expanded(
                           child: Custom_ElevatedButtonicon(
-                            function: saveSubjects,
-                            icon: Icons.save,
-                            text: "Save",
+                            function: showAddSubjectScreen,
+                            icon: Icons.add,
+                            text: "Add Sub",
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Custom_ElevatedButtonicon(
-                            function: showAddSubjectScreen,
-                            icon: Icons.add,
-                            text: "Add Sub",
+                            function: saveSubjects,
+                            icon: Icons.save,
+                            text: "Save",
                           ),
                         ),
                       ],

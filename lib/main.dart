@@ -1,5 +1,7 @@
+import 'package:attendease/providers/minimum_percent.dart';
 import 'package:attendease/providers/name_provider.dart';
 import 'package:attendease/screens/AddAttendence.dart';
+import 'package:attendease/screens/Add_subjects.dart';
 import 'package:attendease/screens/Add_timtable_Screen.dart';
 import 'package:attendease/screens/Profileinput.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,8 +18,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(ChangeNotifierProvider(
-      create: (context) => NameProvider(), child: const MyApp()));
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => NameProvider()),
+      ChangeNotifierProvider(create: (context) => PercentProvider()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -40,6 +47,8 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         isnewuser = false;
         context.read<NameProvider>().name = snapshot['name'];
+        context.read<PercentProvider>().percent =
+            int.parse(snapshot['req_Attendece']);
       });
     }
   }
@@ -59,7 +68,7 @@ class _MyAppState extends State<MyApp> {
               if (isnewuser) {
                 return const ProfileScreen();
               }
-              return AddAttendence();
+              return AddSubjectScreen();
             }
             return const AuthScreen();
           },

@@ -1,4 +1,4 @@
-import 'package:attendease/screens/navigator.dart';
+import 'package:attendease/screens/Add_subjects.dart';
 import 'package:attendease/widgets/CustomInputTile.dart';
 import 'package:attendease/widgets/custome_dropdown.dart';
 import 'package:attendease/widgets/styledelevatedbutton.dart';
@@ -23,22 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var semster = "";
   final user = FirebaseAuth.instance.currentUser;
 
-  // void get_details() async {
-  //   final snapshot = await FirebaseFirestore.instance
-  //       .collection(user!.uid)
-  //       .doc("details")
-  //       .get();
-  //   if (snapshot.exists) {
-  //     setState(() {
-  //       name = snapshot['name'];
-  //       phone = snapshot['phone'];
-  //       req_Attendece = snapshot['req_Attendece'];
-  //       college = snapshot['college'];
-  //       semster = snapshot['semster'];
-  //     });
-  //   }
-  // }
-
   void update_details() async {
     var isvalid = formKey.currentState!.validate();
     if (!isvalid) {
@@ -54,14 +38,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
     await user?.updateDisplayName(semster);
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return navigator();
+      return const AddSubjectScreen();
     }));
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-    // get_details();
     super.initState();
   }
 

@@ -66,23 +66,71 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
   void add_subject_to_day() {
     showModalBottomSheet(
         context: context,
+        isDismissible: true,
         builder: (context) {
-          return ListView.builder(
-              itemCount: subjects.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    setState(() {
-                      weekData[_selectedIndex].add(subjects[index]);
-                    });
-                  },
-                  child: ListTile(
-                    title: Text(subjects[index].subname),
-                    subtitle: Text(subjects[index].subcode),
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const Text(
+                  'Select a Subject',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent,
                   ),
-                );
-              });
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: subjects.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            setState(() {
+                              weekData[_selectedIndex].add(subjects[index]);
+                            });
+                          },
+                          child: Card(
+                            elevation: 4,
+                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                subjects[index].subname,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              subtitle: Text(
+                                subjects[index].subcode,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              trailing: Icon(
+                                Icons.check_circle_outline,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+              ],
+            ),
+          );
         });
   }
 
