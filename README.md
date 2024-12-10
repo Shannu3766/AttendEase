@@ -152,6 +152,6 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 If you have any questions or suggestions, feel free to reach out:
 
 - **Email**: shanmukhasrinivas82@gmail.com
-- **LinkedIn**: [Your LinkedIn Profile](https://www.linkedin.com/in/shannu6637/)
+- **LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/shannu6637/)
 
 ---
