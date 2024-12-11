@@ -31,7 +31,14 @@
 - **State Management**: Flutter's `StatefulWidget`
 
 ---
-
+## Images
+<table>
+  <tr>
+    <td><img src="assests/images/HomeScreen.jpg" alt="Image 1" width="200"></td>
+    
+  </tr>
+</table>
+--
 ## Installation
 
 Follow these steps to run the app on your local machine:
