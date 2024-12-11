@@ -32,15 +32,6 @@
 
 ---
 
-## Screenshots
-
-Include screenshots of your app here. For example:
-
-- **Home Page**: Overview of subjects and attendance percentages.
-- **Detailed Reports**: A card for each subject showing attendance details.
-
----
-
 ## Installation
 
 Follow these steps to run the app on your local machine:
