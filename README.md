@@ -34,8 +34,16 @@
 ## Images
 <table>
   <tr>
-    <td><img src="assests/images/HomeScreen.jpg" alt="Image 1" width="200"></td>
-    
+    <td><img src="assests/images/HomeScreen.jpg" alt="Home Screen" width="300"></td>
+    <td><img src="assests/images/timtable.jpg" alt="Subject" width="300"></td>
+     <td><img src="assests/images/profile.jpg" alt="Profile" width="300"></td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td><img src="assests/images/CreateSubject.jpg" alt="Subject" width="300"></td>
+    <td><img src="assests/images/Addsubjecttotimetable.jpg" alt="Timetable" width="300"></td>
+    <td><img src="assests/images/Attendence report.jpg" alt="Attendence Report" width="300"></td>
   </tr>
 </table>
 --
