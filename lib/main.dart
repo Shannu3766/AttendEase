@@ -1,3 +1,4 @@
+import 'package:attendease/Classes/firebase_notification.dart';
 import 'package:attendease/providers/minimum_percent.dart';
 import 'package:attendease/providers/name_provider.dart';
 import 'package:attendease/screens/AddAttendence.dart';
@@ -18,6 +19,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  final firebaseApi = FirebaseApi();
+  await firebaseApi.initNotifications();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => NameProvider()),
@@ -68,7 +71,7 @@ class _MyAppState extends State<MyApp> {
               if (isnewuser) {
                 return const ProfileScreen();
               }
-              return AddSubjectScreen();
+              return AddTimetableScreen();
             }
             return const AuthScreen();
           },
