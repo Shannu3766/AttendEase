@@ -112,6 +112,7 @@ Ensure the following Firestore collections and documents are configured:
 
 4. **Display Data**:
    - Presents data with an intuitive progress indicator for each subject.
+    
 5. **Analytics**:
   - Generate monthly attendance analytics.
   
