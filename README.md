@@ -114,10 +114,10 @@ Ensure the following Firestore collections and documents are configured:
    - Presents data with an intuitive progress indicator for each subject.
     
 5. **Analytics**:
-  - Generate monthly attendance analytics.
+   - Generate monthly attendance analytics.
   
 6. **Multi-Semester Support**:
-  - Add support for tracking multiple semesters simultaneously.
+   - Add support for tracking multiple semesters simultaneously.
 
 ---
 
