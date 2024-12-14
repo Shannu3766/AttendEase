@@ -1,6 +1,6 @@
 # Attendease 📊
 
-**Attendease** is a Flutter-based mobile application designed to generate and display attendance reports for students. By integrating with Firebase Firestore and Firebase Authentication, the app provides an interactive and dynamic way to track attendance data for various subjects.
+**Attendease** is a Flutter-based mobile application designed to generate and display attendance reports for students. By integrating with Firebase Firestore and Firebase Authentication, the app provides an interactive and dynamic way to track attendance data for various subjects.[Download from Here](https://drive.google.com/drive/folders/1PSZQfORf8TbwycNNk6Wa3z1zChZeg2Zb?usp=sharing)
 
 ---
 
@@ -31,16 +31,22 @@
 - **State Management**: Flutter's `StatefulWidget`
 
 ---
-
-## Screenshots
-
-Include screenshots of your app here. For example:
-
-- **Home Page**: Overview of subjects and attendance percentages.
-- **Detailed Reports**: A card for each subject showing attendance details.
-
----
-
+## Images
+<table>
+  <tr>
+    <td><img src="assests/images/HomeScreen.jpg" alt="Home Screen" width="300"></td>
+    <td><img src="assests/images/timtable.jpg" alt="Subject" width="300"></td>
+     <td><img src="assests/images/profile.jpg" alt="Profile" width="300"></td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td><img src="assests/images/CreateSubject.jpg" alt="Subject" width="300"></td>
+    <td><img src="assests/images/Addsubjecttotimetable.jpg" alt="Timetable" width="300"></td>
+    <td><img src="assests/images/Attendence report.jpg" alt="Attendence Report" width="300"></td>
+  </tr>
+</table>
+--
 ## Installation
 
 Follow these steps to run the app on your local machine:
@@ -106,11 +112,12 @@ Ensure the following Firestore collections and documents are configured:
 
 4. **Display Data**:
    - Presents data with an intuitive progress indicator for each subject.
+    
 5. **Analytics**:
-  - Generate monthly attendance analytics.
+   - Generate monthly attendance analytics.
   
 6. **Multi-Semester Support**:
-  - Add support for tracking multiple semesters simultaneously.
+   - Add support for tracking multiple semesters simultaneously.
 
 ---
 
