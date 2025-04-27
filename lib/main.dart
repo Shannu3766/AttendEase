@@ -16,18 +16,25 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } on FirebaseException catch (e) {
+    if (e.code != 'duplicate-app') {
+      rethrow;
+    }
+    // else, ignore the duplicate app error
+  }
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => NameProvider()),
+        ChangeNotifierProvider(create: (context) => PercentProvider()),
+      ],
+      child: const MyApp(),
+    ),
   );
-  final firebaseApi = FirebaseApi();
-  await firebaseApi.initNotifications();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => NameProvider()),
-      ChangeNotifierProvider(create: (context) => PercentProvider()),
-    ],
-    child: const MyApp(),
-  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -42,16 +49,18 @@ class _MyAppState extends State<MyApp> {
   bool isnewuser = true;
   var name = "";
   void get_details() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection(user!.uid)
-        .doc("details")
-        .get();
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection(user!.uid)
+            .doc("details")
+            .get();
     if (snapshot.exists) {
       setState(() {
         isnewuser = false;
         context.read<NameProvider>().name = snapshot['name'];
-        context.read<PercentProvider>().percent =
-            int.parse(snapshot['req_Attendece']);
+        context.read<PercentProvider>().percent = int.parse(
+          snapshot['req_Attendece'],
+        );
       });
     }
   }
