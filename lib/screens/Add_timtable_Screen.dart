@@ -1,4 +1,5 @@
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/widgets/nosubjects.dart';
 import 'package:attendease/widgets/styledelevatedbutton.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,7 +19,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday"
+    "Saturday",
   ];
   List<Subject> subjects = [];
   List<List<Subject>> weekData = [[], [], [], [], [], []];
@@ -41,12 +42,13 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
         List<dynamic> fetchedSubjects = docSnapshot.data()?['subjects'] ?? [];
 
         setState(() {
-          subjects = fetchedSubjects.map((subject) {
-            return Subject(
-              subname: subject['subname'],
-              subcode: subject['subcode'],
-            );
-          }).toList();
+          subjects =
+              fetchedSubjects.map((subject) {
+                return Subject(
+                  subname: subject['subname'],
+                  subcode: subject['subcode'],
+                );
+              }).toList();
         });
       } else {
         setState(() {
@@ -65,73 +67,75 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
 
   void add_subject_to_day() {
     showModalBottomSheet(
-        context: context,
-        isDismissible: true,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                const Text(
-                  'Select a Subject',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent,
-                  ),
+      context: context,
+      isDismissible: true,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              const Text(
+                'Select a Subject',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
                 ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: subjects.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                            setState(() {
-                              weekData[_selectedIndex].add(subjects[index]);
-                            });
-                          },
-                          child: Card(
-                            elevation: 4,
-                            margin: const EdgeInsets.symmetric(vertical: 8.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: ListTile(
-                              title: Text(
-                                subjects[index].subname,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              subtitle: Text(
-                                subjects[index].subcode,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                              trailing: Icon(
-                                Icons.check_circle_outline,
-                                color: Colors.green,
-                              ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: subjects.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        setState(() {
+                          weekData[_selectedIndex].add(subjects[index]);
+                        });
+                      },
+                      child: Card(
+                        elevation: 4,
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            subjects[index].subname,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
-                        );
-                      }),
+                          subtitle: Text(
+                            subjects[index].subcode,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.check_circle_outline,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              ],
-            ),
-          );
-        });
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> uploadTimetable() async {
@@ -142,16 +146,18 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
           .collection(Semster_num)
           .doc("Timetable");
 
-      List<Map<String, dynamic>> timetableData = weekData.map((day) {
-        return {
-          'subjects': day.map((subject) {
+      List<Map<String, dynamic>> timetableData =
+          weekData.map((day) {
             return {
-              'subname': subject.subname,
-              'subcode': subject.subcode,
+              'subjects':
+                  day.map((subject) {
+                    return {
+                      'subname': subject.subname,
+                      'subcode': subject.subcode,
+                    };
+                  }).toList(),
             };
-          }).toList(),
-        };
-      }).toList();
+          }).toList();
 
       await docRef.set({'weekData': timetableData});
 
@@ -178,15 +184,16 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
         List<dynamic> fetchedWeekData = docSnapshot.data()?['weekData'] ?? [];
 
         setState(() {
-          weekData = fetchedWeekData.map((day) {
-            List<dynamic> subjectsList = day['subjects'] ?? [];
-            return subjectsList.map((subject) {
-              return Subject(
-                subname: subject['subname'],
-                subcode: subject['subcode'],
-              );
-            }).toList();
-          }).toList();
+          weekData =
+              fetchedWeekData.map((day) {
+                List<dynamic> subjectsList = day['subjects'] ?? [];
+                return subjectsList.map((subject) {
+                  return Subject(
+                    subname: subject['subname'],
+                    subcode: subject['subcode'],
+                  );
+                }).toList();
+              }).toList();
         });
       } else {
         setState(() {
@@ -211,30 +218,29 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
   @override
   Widget build(BuildContext context) {
     List<Subject> day_time = weekData[_selectedIndex];
-    return MaterialApp(
-      home: Scaffold(
-        drawer: const drawer_wid(),
-        appBar: AppBar(
-          title: const Text("Attendease"),
-        ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: _selectedIndex == -1
-                ? CircularProgressIndicator()
-                : Column(
+    return Scaffold(
+      drawer: const drawer_wid(),
+      appBar: AppBar(title: const Text("Attendease")),
+      body: SingleChildScrollView(
+        child: Center(
+          child:
+              _selectedIndex == -1
+                  ? CircularProgressIndicator()
+                  : Column(
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal:
-                                MediaQuery.of(context).size.width * 0.05),
+                          horizontal: MediaQuery.of(context).size.width * 0.05,
+                        ),
                         height: 100,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: Days.length,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0,
+                              ),
                               child: GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -245,16 +251,20 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                                 child: CircleAvatar(
                                   radius:
                                       MediaQuery.of(context).size.width * 0.05,
-                                  backgroundColor: _selectedIndex == index
-                                      ? Colors.blue // Highlighted color
-                                      : Colors.grey[300], // Default color
+                                  backgroundColor:
+                                      _selectedIndex == index
+                                          ? Colors
+                                              .blue // Highlighted color
+                                          : Colors.grey[300], // Default color
                                   child: Text(
                                     Days[index][0],
                                     style: TextStyle(
-                                      color: _selectedIndex == index
-                                          ? Colors
-                                              .white // Text color when selected
-                                          : Colors.black, // Default text color
+                                      color:
+                                          _selectedIndex == index
+                                              ? Colors
+                                                  .white // Text color when selected
+                                              : Colors
+                                                  .black, // Default text color
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -269,34 +279,37 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                           left: MediaQuery.of(context).size.width * 0.05,
                           right: MediaQuery.of(context).size.width * 0.05,
                         ),
-                        child: const Divider(
-                          thickness: 2,
-                          color: Colors.black,
-                        ),
+                        child: const Divider(thickness: 2, color: Colors.black),
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.65,
-                          child: day_time.isEmpty
-                              ? Text("No data")
-                              : ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      Divider(color: Colors.grey.shade300),
+                        height: MediaQuery.of(context).size.height * 0.65,
+                        child:
+                            day_time.isEmpty
+                                ? const Nosubjects()
+                                : ListView.separated(
+                                  separatorBuilder:
+                                      (context, index) =>
+                                          Divider(color: Colors.grey.shade300),
                                   itemCount: day_time.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 4.0),
+                                        horizontal: 4.0,
+                                      ),
                                       child: Card(
                                         elevation: 4,
                                         margin: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
+                                          horizontal: 8.0,
+                                        ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
                                         ),
                                         child: ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.all(12.0),
+                                          contentPadding: const EdgeInsets.all(
+                                            12.0,
+                                          ),
                                           title: Text(
                                             day_time[index].subname,
                                             style: const TextStyle(
@@ -330,7 +343,8 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                                       ),
                                     );
                                   },
-                                )),
+                                ),
+                      ),
                       // const Spacer(),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -344,9 +358,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                                 text: "Add Sub",
                               ),
                             ),
-                            const SizedBox(
-                              width: 10,
-                            ),
+                            const SizedBox(width: 10),
                             Expanded(
                               child: Custom_ElevatedButtonicon(
                                 function: uploadTimetable,
@@ -356,10 +368,9 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
-          ),
         ),
       ),
     );

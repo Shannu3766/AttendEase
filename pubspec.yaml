@@ -49,6 +49,8 @@ dependencies:
   # flutter_local_notifications: ^18.0.1
   firebase_core: ^3.8.1
   firebase_messaging: ^15.1.6
+  video_player: ^2.9.5
+  lottie: ^3.3.1
 
 dev_dependencies:
   flutter_test:
@@ -74,11 +76,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assests\images\appicon.png
-    - assests\images\Addsubjecttotimetable.jpg
-    - assests\images\Attendence report.jpg
-    - assests\images\CreateSubject.jpg
-    - assests\images\googleicon.png
+    - assests/images/
+    - assests/animation/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
