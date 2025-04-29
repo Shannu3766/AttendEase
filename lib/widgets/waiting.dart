@@ -9,8 +9,7 @@ class CircularProgress extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      body: Container(
+    return  Container(
         width: screenWidth,
         height: screenHeight,
         decoration: BoxDecoration(color: Colors.blue.shade50),
@@ -78,7 +77,6 @@ class CircularProgress extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }

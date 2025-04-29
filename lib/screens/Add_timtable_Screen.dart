@@ -1,10 +1,13 @@
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/providers/subjects_provider.dart';
 import 'package:attendease/widgets/nosubjects.dart';
 import 'package:attendease/widgets/styledelevatedbutton.dart';
+import 'package:attendease/widgets/waiting.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddTimetableScreen extends StatefulWidget {
   @override
@@ -31,30 +34,36 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
       setState(() {
         isloading = true;
       });
-      final docRef = FirebaseFirestore.instance
-          .collection(user!.uid)
-          .doc("Semester")
-          .collection(Semster_num)
-          .doc("Subjects");
+    //   final docRef = FirebaseFirestore.instance
+    //       .collection(user!.uid)
+    //       .doc("Semester")
+    //       .collection(Semster_num)
+    //       .doc("Subjects");
 
-      final docSnapshot = await docRef.get();
-      if (docSnapshot.exists) {
-        List<dynamic> fetchedSubjects = docSnapshot.data()?['subjects'] ?? [];
+    //   final docSnapshot = await docRef.get();
+    //   if (docSnapshot.exists) {
+    //     List<dynamic> fetchedSubjects = docSnapshot.data()?['subjects'] ?? [];
 
-        setState(() {
-          subjects =
-              fetchedSubjects.map((subject) {
-                return Subject(
-                  subname: subject['subname'],
-                  subcode: subject['subcode'],
-                );
-              }).toList();
-        });
-      } else {
-        setState(() {
-          subjects = [];
-        });
-      }
+    //     setState(() {
+    //       subjects =
+    //           fetchedSubjects.map((subject) {
+    //             return Subject(
+    //               subname: subject['subname'],
+    //               subcode: subject['subcode'],
+    //             );
+    //           }).toList();
+    //     });
+    //   } else {
+    //     setState(() {
+    //       subjects = [];
+    //     });
+    //   }
+    // } catch (error) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text("Failed to fetch subjects: $error")),
+    //   );
+    // }
+      subjects = context.read<subjects_provider>().subjects;
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to fetch subjects: $error")),
@@ -225,7 +234,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
         child: Center(
           child:
               _selectedIndex == -1
-                  ? CircularProgressIndicator()
+                  ? CircularProgress()
                   : Column(
                     children: [
                       Container(

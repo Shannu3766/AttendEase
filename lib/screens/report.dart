@@ -99,10 +99,10 @@ class _generatereportState extends State<generatereport> {
       body: SingleChildScrollView(
         child: Center(
           child:
-              no_attendance
+              subjects.isEmpty
+                  ? const Text("No Subjects Found")
+                  : no_attendance
                   ? const Text("No Attendance Data Found")
-                  : subjects.isEmpty
-                  ? const Text("No subjects added")
                   : Column(
                     children: [
                       SizedBox(

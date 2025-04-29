@@ -1,6 +1,10 @@
+import 'package:attendease/Classes/class_subject.dart';
 import 'package:attendease/providers/minimum_percent.dart';
 import 'package:attendease/providers/name_provider.dart';
 import 'package:attendease/providers/semster_provider.dart';
+import 'package:attendease/providers/subjects_provider.dart';
+import 'package:attendease/screens/AddAttendence.dart';
+import 'package:attendease/screens/Add_subjects.dart';
 import 'package:attendease/screens/Add_timtable_Screen.dart';
 import 'package:attendease/screens/Profileinput.dart';
 import 'package:attendease/widgets/waiting.dart';
@@ -30,6 +34,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => NameProvider()),
         ChangeNotifierProvider(create: (context) => PercentProvider()),
         ChangeNotifierProvider(create: (context) => SemsterProvider()),
+        ChangeNotifierProvider(create: (context) => subjects_provider()),
       ],
       child: const MyApp(),
     ),
@@ -48,6 +53,16 @@ class _MyAppState extends State<MyApp> {
   bool isnewuser = true;
   bool _isLoading = true; // Add this
   var name = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    try {
+      get_details();
+    } catch (e) {
+      return null;
+    }
+  }
 
   void get_details() async {
     if (user != null) {
@@ -65,6 +80,28 @@ class _MyAppState extends State<MyApp> {
         setState(() {
           isnewuser = false;
         });
+        final docRef = FirebaseFirestore.instance
+            .collection(user!.uid)
+            .doc("Semester")
+            .collection(snapshot['semster'])
+            .doc("Subjects")
+            .get()
+            .then((docRef) {
+              List<dynamic> fetchedSubjects = docRef.data()?['subjects'] ?? [];
+              if (fetchedSubjects.isNotEmpty && fetchedSubjects.length > 0) {
+                print(
+                  "-------------------------------------------------------------------------",
+                );
+                print(fetchedSubjects);
+                print(
+                  "-------------------------------------------------------------------------",
+                );
+                // context.read<subjects_provider>(). = true;
+                context.read<subjects_provider>().updateSubjects(
+                  fetchedSubjects,
+                );
+              }
+            });
       }
     }
     setState(() {
@@ -87,13 +124,16 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.hasData) {
               user = FirebaseAuth.instance.currentUser;
               if (_isLoading) {
-                get_details();
                 return const Center(child: CircularProgress());
               } else {
                 if (isnewuser) {
                   return const ProfileScreen();
                 } else {
-                  return AddTimetableScreen();
+                  if (context.watch<subjects_provider>().issubjectsfound) {
+                    return AddAttendence();
+                  } else {
+                    return const Center(child: AddSubjectScreen());
+                  }
                 }
               }
             }

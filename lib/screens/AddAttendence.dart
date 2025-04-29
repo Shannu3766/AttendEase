@@ -1,11 +1,13 @@
 import 'package:attendease/Classes/attendece.dart';
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/providers/subjects_provider.dart';
 import 'package:attendease/widgets/styledelevatedbutton.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AddAttendence extends StatefulWidget {
   @override
@@ -50,12 +52,13 @@ class _AddAttendenceState extends State<AddAttendence> {
         List<dynamic> fetchedSubjects = docSnapshot.data()?['subjects'] ?? [];
 
         setState(() {
-          subjects = fetchedSubjects.map((subject) {
-            return Subject(
-              subname: subject['subname'],
-              subcode: subject['subcode'],
-            );
-          }).toList();
+          subjects =
+              fetchedSubjects.map((subject) {
+                return Subject(
+                  subname: subject['subname'],
+                  subcode: subject['subcode'],
+                );
+              }).toList();
         });
       } else {
         setState(() {
@@ -89,53 +92,62 @@ class _AddAttendenceState extends State<AddAttendence> {
               ),
               const SizedBox(height: 20),
               Expanded(
-                child: ListView.builder(
-                  itemCount: subjects.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          attendece.add(Attendece(
-                            subname: subjects[index].subname,
-                            subcode: subjects[index].subcode,
-                            attended: true,
-                          ));
-                          Navigator.pop(context);
-                        });
-                      },
-                      child: Card(
-                        elevation: 4,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 12.0),
-                          title: Text(
-                            subjects[index].subname,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Code: ${subjects[index].subcode}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.check_circle_outline,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child:
+                    context.read<subjects_provider>().issubjectsfound
+                        ? ListView.builder(
+                          itemCount: subjects.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  attendece.add(
+                                    Attendece(
+                                      subname: subjects[index].subname,
+                                      subcode: subjects[index].subcode,
+                                      attended: true,
+                                    ),
+                                  );
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: Card(
+                                elevation: 4,
+                                margin: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0,
+                                    vertical: 12.0,
+                                  ),
+                                  title: Text(
+                                    subjects[index].subname,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    'Code: ${subjects[index].subcode}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  trailing: Icon(
+                                    Icons.check_circle_outline,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                        : const Center(child: Text("No subjects found")),
               ),
             ],
           ),
@@ -157,25 +169,27 @@ class _AddAttendenceState extends State<AddAttendence> {
 
   Future<void> get_weekdata() async {
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection(user!.uid)
-          .doc("Semester")
-          .collection(Semster_num)
-          .doc("Timetable")
-          .get();
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection(user!.uid)
+              .doc("Semester")
+              .collection(Semster_num)
+              .doc("Timetable")
+              .get();
 
       if (snapshot.exists) {
         List<dynamic> fetchedWeekData = snapshot.data()?["weekData"] ?? [];
         setState(() {
-          weekdata = fetchedWeekData.map((day) {
-            List<dynamic> subjectsList = day['subjects'] ?? [];
-            return subjectsList.map((subject) {
-              return Subject(
-                subname: subject['subname'],
-                subcode: subject['subcode'],
-              );
-            }).toList();
-          }).toList();
+          weekdata =
+              fetchedWeekData.map((day) {
+                List<dynamic> subjectsList = day['subjects'] ?? [];
+                return subjectsList.map((subject) {
+                  return Subject(
+                    subname: subject['subname'],
+                    subcode: subject['subcode'],
+                  );
+                }).toList();
+              }).toList();
         });
       } else {
         print("No timetable data found.");
@@ -189,23 +203,25 @@ class _AddAttendenceState extends State<AddAttendence> {
     try {
       final day =
           "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-      final snapshot = await FirebaseFirestore.instance
-          .collection(user!.uid)
-          .doc("Attendence")
-          .collection(Semster_num)
-          .doc(day)
-          .get();
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection(user!.uid)
+              .doc("Attendence")
+              .collection(Semster_num)
+              .doc(day)
+              .get();
 
       if (snapshot.exists) {
         List<dynamic> fetchedSubjects = snapshot.data()?["subjects"] ?? [];
         setState(() {
-          attendece = fetchedSubjects.map((subject) {
-            return Attendece(
-              subname: subject['subname'],
-              subcode: subject['subcode'],
-              attended: subject['attended'],
-            );
-          }).toList();
+          attendece =
+              fetchedSubjects.map((subject) {
+                return Attendece(
+                  subname: subject['subname'],
+                  subcode: subject['subcode'],
+                  attended: subject['attended'],
+                );
+              }).toList();
           isdaydataavaliable = true;
         });
       } else {
@@ -216,13 +232,16 @@ class _AddAttendenceState extends State<AddAttendence> {
           });
         } else {
           setState(() {
-            attendece = weekdata[index_day]
-                .map((subject) => Attendece(
-                      subname: subject.subname,
-                      subcode: subject.subcode,
-                      attended: true,
-                    ))
-                .toList();
+            attendece =
+                weekdata[index_day]
+                    .map(
+                      (subject) => Attendece(
+                        subname: subject.subname,
+                        subcode: subject.subcode,
+                        attended: true,
+                      ),
+                    )
+                    .toList();
             isdaydataavaliable = true;
           });
         }
@@ -278,8 +297,10 @@ class _AddAttendenceState extends State<AddAttendence> {
     return Scaffold(
       drawer: drawer_wid(),
       appBar: AppBar(
-        title: const Text('Attendease',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Attendease',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -292,7 +313,9 @@ class _AddAttendenceState extends State<AddAttendence> {
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 12.0),
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.blue.shade50,
                         borderRadius: BorderRadius.circular(12.0),
@@ -328,7 +351,8 @@ class _AddAttendenceState extends State<AddAttendence> {
                     ),
                   ),
                   const SizedBox(
-                      width: 12.0), // Spacing between container and button
+                    width: 12.0,
+                  ), // Spacing between container and button
                   CircleAvatar(
                     radius: 24.0,
                     backgroundColor: Colors.blue,
@@ -347,70 +371,86 @@ class _AddAttendenceState extends State<AddAttendence> {
               const SizedBox(height: 16),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.7,
-                child: attendece.isNotEmpty
-                    ? ListView.separated(
-                        itemCount: attendece.length,
-                        separatorBuilder: (context, index) =>
-                            Divider(color: Colors.grey.shade300),
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                attendece[index].attended =
-                                    !attendece[index].attended;
-                              });
-                            },
-                            child: Card(
-                              margin: const EdgeInsets.symmetric(vertical: 8.0),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.all(12.0),
-                                title: Text(
-                                  attendece[index].subname,
-                                  style: const TextStyle(
+                child:
+                    attendece.isNotEmpty
+                        ? ListView.separated(
+                          itemCount: attendece.length,
+                          separatorBuilder:
+                              (context, index) =>
+                                  Divider(color: Colors.grey.shade300),
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  attendece[index].attended =
+                                      !attendece[index].attended;
+                                });
+                              },
+                              child: Card(
+                                margin: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(12.0),
+                                  title: Text(
+                                    attendece[index].subname,
+                                    style: const TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(
-                                  attendece[index].subcode,
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.grey),
-                                ),
-                                trailing: Checkbox(
-                                  value: attendece[index].attended,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      attendece[index].attended = value!;
-                                    });
-                                  },
-                                ),
-                                leading: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      attendece.removeAt(index);
-                                    });
-                                  },
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    attendece[index].subcode,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  trailing: Checkbox(
+                                    value: attendece[index].attended,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        attendece[index].attended = value!;
+                                      });
+                                    },
+                                  ),
+                                  leading: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        attendece.removeAt(index);
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                 ),
                               ),
+                            );
+                          },
+                        )
+                        : const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.beach_access,
+                              size: 100,
+                              color: Colors.blue,
                             ),
-                          );
-                        },
-                      )
-                    : const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.beach_access,
-                              size: 100, color: Colors.blue),
-                          SizedBox(height: 20),
-                          Text(
-                            "It's a Holiday...",
-                            style: TextStyle(fontSize: 24, color: Colors.grey),
-                          ),
-                        ],
-                      ),
+                            SizedBox(height: 20),
+                            Text(
+                              "It's a Holiday...",
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
               ),
               Row(
                 children: [
@@ -430,7 +470,7 @@ class _AddAttendenceState extends State<AddAttendence> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

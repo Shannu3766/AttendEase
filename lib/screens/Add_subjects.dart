@@ -1,10 +1,14 @@
 import 'package:attendease/Classes/class_subject.dart';
+import 'package:attendease/providers/subjects_provider.dart';
 import 'package:attendease/widgets/styledelevatedbutton.dart';
+import 'package:attendease/widgets/waiting.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'dart:ui';
 
 class AddSubjectScreen extends StatefulWidget {
   const AddSubjectScreen({super.key});
@@ -46,14 +50,16 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
       final docSnapshot = await docRef.get();
       if (docSnapshot.exists) {
         List<dynamic> fetchedSubjects = docSnapshot.data()?['subjects'] ?? [];
+        context.read<subjects_provider>().updateSubjects(fetchedSubjects);
 
         setState(() {
-          subjects = fetchedSubjects.map((subject) {
-            return Subject(
-              subname: subject['subname'],
-              subcode: subject['subcode'],
-            );
-          }).toList();
+          subjects =
+              fetchedSubjects.map((subject) {
+                return Subject(
+                  subname: subject['subname'],
+                  subcode: subject['subcode'],
+                );
+              }).toList();
         });
       } else {
         setState(() {
@@ -75,22 +81,16 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
           .doc("Subjects")
           .collection(subjects[i].subname)
           .doc("Attendence")
-          .set({
-        'total': 0,
-        'attended': 0,
-      });
+          .set({'total': 0, 'attended': 0});
     }
   }
 
   void saveSubjects() async {
     try {
-      // Prepare the data to save
-      List<Map<String, String>> subjectsData = subjects.map((subject) {
-        return {
-          'subname': subject.subname,
-          'subcode': subject.subcode,
-        };
-      }).toList();
+      List<Map<String, String>> subjectsData =
+          subjects.map((subject) {
+            return {'subname': subject.subname, 'subcode': subject.subcode};
+          }).toList();
 
       // Reference to the Firestore document
       final docRef = FirebaseFirestore.instance
@@ -141,9 +141,10 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
             left: MediaQuery.of(context).size.width * 0.05,
             right: MediaQuery.of(context).size.width * 0.05,
             top: MediaQuery.of(context).size.height * 0.05,
-            bottom: MediaQuery.of(context)
-                .viewInsets
-                .bottom, // Adjust padding for the keyboard
+            bottom:
+                MediaQuery.of(
+                  context,
+                ).viewInsets.bottom, // Adjust padding for the keyboard
           ),
           child: SingleChildScrollView(
             child: Form(
@@ -157,12 +158,8 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                     decoration: const InputDecoration(
                       hintText: "Subject Name",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
-                        ),
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        borderSide: BorderSide(color: Colors.black),
                       ),
                     ),
                     validator: (value) {
@@ -182,12 +179,8 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                     decoration: const InputDecoration(
                       hintText: "Subject Code",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
-                        ),
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        borderSide: BorderSide(color: Colors.black),
                       ),
                     ),
                     validator: (value) {
@@ -230,44 +223,54 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     return Scaffold(
       drawer: drawer_wid(),
       appBar: AppBar(
-        title:
-            Text("AttendEase", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          "AttendEase",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            isloading
-                ? const Center(child: CircularProgressIndicator())
-                : SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.8,
-                    child: subjects.isEmpty
-                        ? const Center(child: Text("No subjects added yet"))
-                        : ListView.separated(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child:
+                      subjects.isEmpty
+                          ? const Center(child: Text("No subjects added yet"))
+                          : ListView.separated(
                             itemCount: subjects.length,
-                            separatorBuilder: (context, index) =>
-                                Divider(color: Colors.grey.shade300),
+                            separatorBuilder:
+                                (context, index) =>
+                                    Divider(color: Colors.grey.shade300),
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                ),
                                 child: Card(
                                   elevation: 4,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.all(12.0),
                                     title: Text(
                                       subjects[index].subname,
                                       style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     subtitle: Text(
                                       'Code: ${subjects[index].subcode}',
                                       style: const TextStyle(
-                                          fontSize: 14, color: Colors.grey),
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                     trailing: IconButton(
                                       onPressed: () {
@@ -275,77 +278,78 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                                           subjects.removeAt(index);
                                         });
                                       },
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
                                     ),
-                                    // leading:
                                   ),
                                 ),
                               );
                             },
-                          )
-
-                    // : ListView.separated(
-                    //     itemCount: subjects.length,
-                    //     separatorBuilder: (context, index) =>
-                    //         Divider(color: Colors.grey.shade300),
-                    //     itemBuilder: (context, index) {
-                    //       return Card(
-                    //         elevation: 4,
-                    //         margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    //         shape: RoundedRectangleBorder(
-                    //             borderRadius: BorderRadius.circular(10)),
-                    //         child: ListTile(
-                    //           title: Text(subjects[index].subname),
-                    //           subtitle:
-                    //               Text('Code: ${subjects[index].subcode}'),
-                    //           trailing: IconButton(
-                    //             icon: const Icon(Icons.delete),
-                    //             onPressed: () {
-                    //               setState(() {
-                    //                 subjects.removeAt(index);
-                    //               });
-                    //             },
-                    //           ),
-                    //         ),
-                    //       );
-                    //     },
-                    //   ),
-                    ),
-            !isloading
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 18.0, right: 18.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Custom_ElevatedButtonicon(
-                            function: showAddSubjectScreen,
-                            icon: Icons.add,
-                            text: "Add Sub",
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Custom_ElevatedButtonicon(
-                            function: saveSubjects,
-                            icon: Icons.save,
-                            text: "Save",
+                ),
+                !isloading
+                    ? Padding(
+                      padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Custom_ElevatedButtonicon(
+                              function: showAddSubjectScreen,
+                              icon: Icons.add,
+                              text: "Add Sub",
+                            ),
                           ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Custom_ElevatedButtonicon(
+                              function: saveSubjects,
+                              icon: Icons.save,
+                              text: "Save",
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    : const SizedBox(),
+              ],
+            ),
+          ),
+          if (isloading)
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(
+                color: Colors.black.withOpacity(0.2),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: const LinearProgressIndicator(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          backgroundColor: Color(0xFFE3F2FD),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.blue,
+                          ),
+                          minHeight: 6,
                         ),
-                      ],
-                    ),
-                  )
-                : Text(""),
-          ],
-        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Fetching Subjects',
+                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     showAddSubjectScreen();
-      //   },
-      //   child: Icon(Icons.add),
-      //   backgroundColor: Colors.blue,
-      // ),
     );
   }
 }
