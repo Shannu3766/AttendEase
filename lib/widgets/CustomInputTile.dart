@@ -30,16 +30,16 @@ class CustomInputTile extends StatelessWidget {
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           labelText: labelText,
-          labelStyle: TextStyle(color: Colors.deepPurple),
+          labelStyle: TextStyle(color: Colors.black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.0),
-            borderSide: BorderSide(color: Colors.deepPurple),
+            borderSide: BorderSide(color: Colors.blue.shade300),
           ),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(12.0),
             child: CircleAvatar(
-              backgroundColor: Colors.deepPurple,
-              child: Icon(icon, color: Colors.white),
+              backgroundColor: Colors.blue.shade300,
+              child: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
             ),
           ),
         ),

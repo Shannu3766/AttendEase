@@ -21,51 +21,30 @@ class CustomDropdown extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: DropdownButtonFormField<String>(
-        hint: Text(hintText, style: TextStyle(color: Colors.deepPurple)),
-        icon: Icon(icon, color: Colors.deepPurple),
+        hint: Text(
+          hintText,
+          style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+        ),
+        icon: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(color: Colors.deepPurple),
+          labelStyle: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.0),
-            borderSide: BorderSide(color: Colors.deepPurple),
+            borderSide: BorderSide(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
         onChanged: onChanged,
         validator: validator,
         items: const [
-          DropdownMenuItem(
-            value: 'Sem1',
-            child: Text('Sem 1'),
-          ),
-          DropdownMenuItem(
-            value: 'Sem2',
-            child: Text('Sem 2'),
-          ),
-          DropdownMenuItem(
-            value: 'Sem3',
-            child: Text('Sem 3'),
-          ),
-          DropdownMenuItem(
-            value: 'Sem4',
-            child: Text('Sem 4'),
-          ),
-          DropdownMenuItem(
-            value: 'Sem5',
-            child: Text('Sem 5'),
-          ),
-          DropdownMenuItem(
-            value: 'Sem6',
-            child: Text('Sem 6'),
-          ),
-          DropdownMenuItem(
-            value: 'Sem7',
-            child: Text('Sem 7'),
-          ),
-          DropdownMenuItem(
-            value: 'Sem8',
-            child: Text('Sem 8'),
-          ),
+          DropdownMenuItem(value: 'Sem1', child: Text('Sem 1')),
+          DropdownMenuItem(value: 'Sem2', child: Text('Sem 2')),
+          DropdownMenuItem(value: 'Sem3', child: Text('Sem 3')),
+          DropdownMenuItem(value: 'Sem4', child: Text('Sem 4')),
+          DropdownMenuItem(value: 'Sem5', child: Text('Sem 5')),
+          DropdownMenuItem(value: 'Sem6', child: Text('Sem 6')),
+          DropdownMenuItem(value: 'Sem7', child: Text('Sem 7')),
+          DropdownMenuItem(value: 'Sem8', child: Text('Sem 8')),
         ],
       ),
     );
