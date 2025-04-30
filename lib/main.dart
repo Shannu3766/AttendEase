@@ -89,14 +89,6 @@ class _MyAppState extends State<MyApp> {
             .then((docRef) {
               List<dynamic> fetchedSubjects = docRef.data()?['subjects'] ?? [];
               if (fetchedSubjects.isNotEmpty && fetchedSubjects.length > 0) {
-                print(
-                  "-------------------------------------------------------------------------",
-                );
-                print(fetchedSubjects);
-                print(
-                  "-------------------------------------------------------------------------",
-                );
-                // context.read<subjects_provider>(). = true;
                 context.read<subjects_provider>().updateSubjects(
                   fetchedSubjects,
                 );

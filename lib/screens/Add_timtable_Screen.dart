@@ -1,6 +1,6 @@
 import 'package:attendease/Classes/class_subject.dart';
 import 'package:attendease/providers/subjects_provider.dart';
-import 'package:attendease/widgets/nosubjects.dart';
+import 'package:attendease/widgets/Noattendence.dart';
 import 'package:attendease/widgets/styledelevatedbutton.dart';
 import 'package:attendease/widgets/waiting.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
@@ -294,7 +294,7 @@ class _AddTimetableScreenState extends State<AddTimetableScreen> {
                         height: MediaQuery.of(context).size.height * 0.65,
                         child:
                             day_time.isEmpty
-                                ? const Nosubjects()
+                                ? const Nodaysubjects()
                                 : ListView.separated(
                                   separatorBuilder:
                                       (context, index) =>

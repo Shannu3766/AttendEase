@@ -1,5 +1,8 @@
 import 'package:attendease/Classes/report_class.dart';
 import 'package:attendease/providers/minimum_percent.dart';
+import 'package:attendease/screens/AddAttendence.dart';
+import 'package:attendease/screens/Add_subjects.dart';
+import 'package:attendease/widgets/Nosubjects.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,6 +43,10 @@ class _generatereportState extends State<generatereport> {
       }
     } else {
       print("No Subjects Found");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddSubjectScreen()),
+      );
     }
   }
 
@@ -96,14 +103,21 @@ class _generatereportState extends State<generatereport> {
     return Scaffold(
       drawer: drawer_wid(),
       appBar: AppBar(title: const Text('Attendencee Report')),
-      body: SingleChildScrollView(
-        child: Center(
-          child:
-              subjects.isEmpty
-                  ? const Text("No Subjects Found")
-                  : no_attendance
-                  ? const Text("No Attendance Data Found")
-                  : Column(
+      body:
+          no_attendance
+              ? Nosubjects(
+                showAddSubjectScreen: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddAttendence()),
+                  );
+                },
+                button_text: "Add your attendance",
+                message: "No attendance data found",
+              )
+              : SingleChildScrollView(
+                child: Center(
+                  child: Column(
                     children: [
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 1,
@@ -114,7 +128,6 @@ class _generatereportState extends State<generatereport> {
                                 (subjects[subcodes[index]].attended) /
                                 (subjects[subcodes[index]].totalclasses);
                             final percent_val = percent * 100;
-
                             return InkWell(
                               onTap: () {
                                 // You can handle any tap actions here, if needed
@@ -196,8 +209,8 @@ class _generatereportState extends State<generatereport> {
                       ),
                     ],
                   ),
-        ),
-      ),
+                ),
+              ),
     );
   }
 }

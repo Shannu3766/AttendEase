@@ -1,5 +1,6 @@
 import 'package:attendease/Classes/class_subject.dart';
 import 'package:attendease/providers/subjects_provider.dart';
+import 'package:attendease/widgets/Nosubjects.dart';
 import 'package:attendease/widgets/styledelevatedbutton.dart';
 import 'package:attendease/widgets/waiting.dart';
 import 'package:attendease/widgets/widget_drawer.dart';
@@ -65,8 +66,10 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
         setState(() {
           subjects = [];
         });
+        context.read<subjects_provider>().updateSubjects([]);
       }
     } catch (error) {}
+    if (!mounted) return;
     setState(() {
       isloading = !isloading;
     });
@@ -131,7 +134,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     Navigator.pop(context); // Close the bottom sheet after submission
   }
 
-  void showAddSubjectScreen() {
+  void Addsubject() {
     showModalBottomSheet(
       context: context,
       isDismissible: true,
@@ -208,7 +211,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                       icon: const Icon(Icons.save),
                     ),
                   ),
-                  SizedBox(height: 1000),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 ],
               ),
             ),
@@ -237,7 +240,11 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                   height: MediaQuery.of(context).size.height * 0.8,
                   child:
                       subjects.isEmpty
-                          ? const Center(child: Text("No subjects added yet"))
+                          ? Nosubjects(
+                            showAddSubjectScreen: Addsubject,
+                            message: "No subjects added yet",
+                            button_text: "Add Your First Subject",
+                          )
                           : ListView.separated(
                             itemCount: subjects.length,
                             separatorBuilder:
@@ -276,6 +283,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                                       onPressed: () {
                                         setState(() {
                                           subjects.removeAt(index);
+                                          saveSubjects();
                                         });
                                       },
                                       icon: const Icon(
@@ -290,28 +298,33 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                           ),
                 ),
                 !isloading
-                    ? Padding(
-                      padding: const EdgeInsets.only(left: 18.0, right: 18.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Custom_ElevatedButtonicon(
-                              function: showAddSubjectScreen,
-                              icon: Icons.add,
-                              text: "Add Sub",
-                            ),
+                    ? subjects.isEmpty
+                        ? const SizedBox()
+                        : Padding(
+                          padding: const EdgeInsets.only(
+                            left: 18.0,
+                            right: 18.0,
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Custom_ElevatedButtonicon(
-                              function: saveSubjects,
-                              icon: Icons.save,
-                              text: "Save",
-                            ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Custom_ElevatedButtonicon(
+                                  function: Addsubject,
+                                  icon: Icons.add,
+                                  text: "Add Sub",
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Custom_ElevatedButtonicon(
+                                  function: saveSubjects,
+                                  icon: Icons.save,
+                                  text: "Save",
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )
+                        )
                     : const SizedBox(),
               ],
             ),

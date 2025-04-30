@@ -6,8 +6,10 @@ import 'package:attendease/widgets/widget_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:scrollable_text/scrollable_text.dart';
 
 class AddAttendence extends StatefulWidget {
   @override
@@ -19,6 +21,7 @@ class _AddAttendenceState extends State<AddAttendence> {
   List<List<Subject>> weekdata = [];
   List<Attendece> attendece = [];
   bool isdaydataavaliable = false;
+  bool isloading = false;
   int index_day = -1;
   List<Subject> subjects = [];
   late String Semster_num;
@@ -27,6 +30,7 @@ class _AddAttendenceState extends State<AddAttendence> {
   @override
   void initState() {
     Semster_num = user!.displayName ?? '';
+
     fetchSubjects();
     initializeData();
     super.initState();
@@ -39,7 +43,31 @@ class _AddAttendenceState extends State<AddAttendence> {
     await get_day_data_firebase();
   }
 
+  // void check_attendence() {
+  // if (isdaydataavaliable) {
+  //   showDialog(
+  //     context: context,
+  //     builder:
+  //         (BuildContext context) => AlertDialog(
+  //           title: Text("Attendance already exists"),
+  //           content: Text("Do you want to update the attendance?"),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text("Ok"),
+  //             ),
+  //           ],
+  //         ),
+  //   );
+  // }
+  // }
+
   Future<void> fetchSubjects() async {
+    setState(() {
+      isloading = !isloading;
+    });
     try {
       final docRef = FirebaseFirestore.instance
           .collection(user!.uid)
@@ -158,13 +186,15 @@ class _AddAttendenceState extends State<AddAttendence> {
 
   void update_index_day() {
     int day = selectedDate.weekday;
-    setState(() {
-      if (day >= 1 && day <= 5) {
-        index_day = day - 1; // Weekdays: Monday = 1, Sunday = 7
-      } else {
-        index_day = -1; // Weekend
-      }
-    });
+    if (mounted) {
+      setState(() {
+        if (day >= 1 && day <= 5) {
+          index_day = day - 1; // Weekdays: Monday = 1, Sunday = 7
+        } else {
+          index_day = -1; // Weekend
+        }
+      });
+    }
   }
 
   Future<void> get_weekdata() async {
@@ -249,6 +279,9 @@ class _AddAttendenceState extends State<AddAttendence> {
     } catch (e) {
       print("Error fetching day data: $e");
     }
+    setState(() {
+      isloading = !isloading;
+    });
   }
 
   Future<void> update_attendece() async {
@@ -302,177 +335,232 @@ class _AddAttendenceState extends State<AddAttendence> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
                 children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 12.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(12.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            blurRadius: 8.0,
-                            offset: const Offset(0, 4), // Shadow position
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Selected Date:",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          Text(
-                            formattedDate,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 12.0,
-                  ), // Spacing between container and button
-                  CircleAvatar(
-                    radius: 24.0,
-                    backgroundColor: Colors.blue,
-                    child: IconButton(
-                      onPressed: () {
-                        selectdate();
-                      },
-                      icon: const Icon(
-                        Icons.calendar_month,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
-                child:
-                    attendece.isNotEmpty
-                        ? ListView.separated(
-                          itemCount: attendece.length,
-                          separatorBuilder:
-                              (context, index) =>
-                                  Divider(color: Colors.grey.shade300),
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  attendece[index].attended =
-                                      !attendece[index].attended;
-                                });
-                              },
-                              child: Card(
-                                margin: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: ListTile(
-                                  contentPadding: const EdgeInsets.all(12.0),
-                                  title: Text(
-                                    attendece[index].subname,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    attendece[index].subcode,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  trailing: Checkbox(
-                                    value: attendece[index].attended,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        attendece[index].attended = value!;
-                                      });
-                                    },
-                                  ),
-                                  leading: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        attendece.removeAt(index);
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                        : const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.beach_access,
-                              size: 100,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              "It's a Holiday...",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
+                  if (isdaydataavaliable)
+                    Container(
+                      color: Colors.blue.shade50,
+                      child: ScrollableText(
+                        'Attendance already exists.  Attendance already exists ',
+                        mode: ScrollableTextMode.endless,
+                        velocity: Velocity(pixelsPerSecond: Offset(150, 0)),
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
                         ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Custom_ElevatedButtonicon(
-                      function: add_subject,
-                      icon: Icons.add,
-                      text: "Add Sub",
+                        textAlign: TextAlign.right,
+                        selectable: true,
+                      ),
                     ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 12.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(12.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 8.0,
+                                offset: const Offset(0, 4), // Shadow position
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Selected Date:",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              Text(
+                                formattedDate,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 12.0,
+                      ), // Spacing between container and button
+                      CircleAvatar(
+                        radius: 24.0,
+                        backgroundColor: Colors.blue,
+                        child: IconButton(
+                          onPressed: () {
+                            selectdate();
+                          },
+                          icon: const Icon(
+                            Icons.calendar_month,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Custom_ElevatedButtonicon(
-                      function: update_attendece,
-                      icon: Icons.save,
-                      text: "Save",
-                    ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child:
+                        attendece.isNotEmpty
+                            ? ListView.separated(
+                              itemCount: attendece.length,
+                              separatorBuilder:
+                                  (context, index) =>
+                                      Divider(color: Colors.grey.shade300),
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      attendece[index].attended =
+                                          !attendece[index].attended;
+                                    });
+                                  },
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 8.0,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: const EdgeInsets.all(
+                                        12.0,
+                                      ),
+                                      title: Text(
+                                        attendece[index].subname,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        attendece[index].subcode,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      trailing: Checkbox(
+                                        value: attendece[index].attended,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            attendece[index].attended = value!;
+                                          });
+                                        },
+                                      ),
+                                      leading: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            attendece.removeAt(index);
+                                          });
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                            : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.library_books_outlined,
+                                  size: 10,
+                                  color: Colors.blue.shade300,
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  "It's a Holiday...",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
                   ),
                 ],
               ),
-            ],
+            ),
           ),
+          if (isloading)
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(
+                color: Colors.black.withOpacity(0.2),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: const LinearProgressIndicator(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          backgroundColor: Color(0xFFE3F2FD),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.blue,
+                          ),
+                          minHeight: 6,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Fetching Subjects',
+                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Custom_ElevatedButtonicon(
+                function: add_subject,
+                icon: Icons.add,
+                text: "Add Sub",
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Custom_ElevatedButtonicon(
+                function: update_attendece,
+                icon: Icons.save,
+                text: "Save",
+              ),
+            ),
+          ],
         ),
       ),
     );
