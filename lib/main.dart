@@ -63,8 +63,6 @@ class _MyAppState extends State<MyApp> {
     } catch (e) {
       return null;
     }
-    // Initialize notification service
-    NotificationService.initialize(context);
   }
 
   void get_details() async {
@@ -138,44 +136,5 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
-  }
-}
-
-class NotificationService {
-  static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-
-  static Future<void> initialize(BuildContext context) async {
-    // Request permissions if not already granted
-    NotificationSettings settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      print('User denied permission');
-      // Optionally, show a dialog to explain why notifications are needed
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.notDetermined) {
-      print('Permission not determined');
-    }
-
-    // Handle foreground messages
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Received a message in the foreground!');
-      if (message.notification != null) {
-        // You can show a dialog/snackbar here
-        print('Message title: ${message.notification!.title}');
-        print('Message body: ${message.notification!.body}');
-      }
-    });
-
-    // Handle background and terminated state messages (optional)
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Message clicked!');
-      // Navigate or handle the message
-    });
   }
 }
