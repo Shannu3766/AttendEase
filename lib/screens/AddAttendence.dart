@@ -22,6 +22,7 @@ class _AddAttendenceState extends State<AddAttendence> {
   List<Attendece> attendece = [];
   bool isdaydataavaliable = false;
   bool isloading = false;
+  bool isonlinedata = false;
   int index_day = -1;
   List<Subject> subjects = [];
   late String Semster_num;
@@ -66,7 +67,7 @@ class _AddAttendenceState extends State<AddAttendence> {
 
   Future<void> fetchSubjects() async {
     setState(() {
-      isloading = !isloading;
+      isloading = true;
     });
     try {
       final docRef = FirebaseFirestore.instance
@@ -230,6 +231,9 @@ class _AddAttendenceState extends State<AddAttendence> {
   }
 
   Future<void> get_day_data_firebase() async {
+    setState(() {
+      isloading = true;
+    });
     try {
       final day =
           "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
@@ -240,6 +244,12 @@ class _AddAttendenceState extends State<AddAttendence> {
               .collection(Semster_num)
               .doc(day)
               .get();
+      print(snapshot.exists);
+      print("---------------------------------------------------------");
+
+      setState(() {
+        isonlinedata = snapshot.exists;
+      });
 
       if (snapshot.exists) {
         List<dynamic> fetchedSubjects = snapshot.data()?["subjects"] ?? [];
@@ -280,7 +290,7 @@ class _AddAttendenceState extends State<AddAttendence> {
       print("Error fetching day data: $e");
     }
     setState(() {
-      isloading = !isloading;
+      isloading = false;
     });
   }
 
@@ -342,17 +352,36 @@ class _AddAttendenceState extends State<AddAttendence> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  if (isdaydataavaliable)
+                  if (isonlinedata)
                     Container(
-                      color: Colors.blue.shade50,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(12.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            blurRadius: 8.0,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      margin: const EdgeInsets.only(bottom: 16.0),
                       child: ScrollableText(
-                        'Attendance already exists.  Attendance already exists ',
+                        'Attendance already exists.. Attendance already exists',
                         mode: ScrollableTextMode.endless,
-                        velocity: Velocity(pixelsPerSecond: Offset(150, 0)),
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
+                        velocity: const Velocity(
+                          pixelsPerSecond: Offset(100, 0),
                         ),
-                        textAlign: TextAlign.right,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                        textAlign: TextAlign.center,
                         selectable: true,
                       ),
                     ),
@@ -489,7 +518,7 @@ class _AddAttendenceState extends State<AddAttendence> {
                               children: [
                                 Icon(
                                   Icons.library_books_outlined,
-                                  size: 10,
+                                  size: 80,
                                   color: Colors.blue.shade300,
                                 ),
                                 SizedBox(height: 20),

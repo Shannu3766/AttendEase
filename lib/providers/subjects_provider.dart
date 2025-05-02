@@ -11,12 +11,12 @@ class subjects_provider with ChangeNotifier {
 
   void _updateState() {
     final newState = _subjects.isNotEmpty;
-    print(
-      "DEBUG: Current state - issubjectsfound: $_issubjectsfound, newState: $newState, subjects count: ${_subjects.length}",
-    );
+    // print(
+    //   "DEBUG: Current state - issubjectsfound: $_issubjectsfound, newState: $newState, subjects count: ${_subjects.length}",
+    // );
     _issubjectsfound = newState;
     notifyListeners();
-    print("DEBUG: After notification - issubjectsfound: $_issubjectsfound");
+    // print("DEBUG: After notification - issubjectsfound: $_issubjectsfound");
   }
 
   // Function to update subjects list

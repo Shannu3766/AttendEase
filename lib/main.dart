@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -26,7 +27,6 @@ void main() async {
     if (e.code != 'duplicate-app') {
       rethrow;
     }
-    // else, ignore the duplicate app error
   }
   runApp(
     MultiProvider(
@@ -74,16 +74,16 @@ class _MyAppState extends State<MyApp> {
       if (snapshot.exists) {
         context.read<NameProvider>().name = snapshot['name'];
         context.read<PercentProvider>().percent = int.parse(
-          snapshot['req_Attendece'],
+          snapshot['req_Attendance'],
         );
-        context.read<SemsterProvider>().semster = snapshot['semster'];
+        context.read<SemsterProvider>().semster = snapshot['semester'];
         setState(() {
           isnewuser = false;
         });
         final docRef = FirebaseFirestore.instance
             .collection(user!.uid)
             .doc("Semester")
-            .collection(snapshot['semster'])
+            .collection(snapshot['semester'])
             .doc("Subjects")
             .get()
             .then((docRef) {
@@ -98,6 +98,7 @@ class _MyAppState extends State<MyApp> {
     }
     setState(() {
       _isLoading = false;
+      // NotificationService().scheduleDailyNotificationAt5PM();
     });
   }
 

@@ -13,6 +13,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
+
     }
 
     kotlinOptions {
@@ -20,6 +22,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled = true
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.attendease"
         // You can update the following values to match your application needs.
@@ -40,6 +43,8 @@ android {
     dependencies {
         implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
         implementation("com.google.firebase:firebase-analytics")
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+        
     }
 }
 
