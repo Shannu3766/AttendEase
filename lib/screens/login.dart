@@ -22,7 +22,6 @@ class _AuthScreenState extends State<AuthScreen> {
     );
     UserCredential userCred =
         await FirebaseAuth.instance.signInWithCredential(credential);
-    // return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override

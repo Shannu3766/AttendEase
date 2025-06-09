@@ -31,12 +31,17 @@ class _ProfilePageState extends State<ProfilePage> {
       name = snapshot['name'];
       email = user.email!;
       phone = snapshot['phone'];
-      req_attendece = snapshot['req_Attendece'];
+      req_attendece = snapshot['req_Attendance'];
       college = snapshot['college'];
-      semster = snapshot['semster'];
+      semster = snapshot['semester'];
     });
   }
+// college
+// name
 
+// phone
+// req_Attendance
+// semester
   @override
   void initState() {
     get_details();
